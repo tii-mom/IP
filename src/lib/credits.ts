@@ -36,20 +36,27 @@ export function loadCreditState(): CreditState {
     const today = new Date().toLocaleDateString();
     if (state.date !== today) {
       state.date = today;
-      state.balance = 10;
-      // Reset daily limit tasks in completedTasks
+
+      const oldBalance = state.balance;
+
+      if (state.balance < 10) {
+        const topUpAmount = 10 - oldBalance;
+        state.balance = 10;
+
+        const resetTx: CreditTransaction = {
+          id: `tx_reset_${Date.now()}`,
+          amount: topUpAmount,
+          type: 'daily_checkin',
+          description: 'Daily baseline credit top-up',
+          timestamp: new Date().toISOString()
+        };
+
+        state.transactions.push(resetTx);
+      }
+
       delete state.completedTasks['daily_checkin'];
       delete state.completedTasks['share_x'];
-      
-      // Log reset transaction
-      const resetTx: CreditTransaction = {
-        id: `tx_reset_${Date.now()}`,
-        amount: 10,
-        type: 'daily_checkin',
-        description: 'Daily reset allocation',
-        timestamp: new Date().toISOString()
-      };
-      state.transactions.push(resetTx);
+
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
     }
 

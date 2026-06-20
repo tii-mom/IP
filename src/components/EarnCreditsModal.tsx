@@ -61,7 +61,7 @@ export default function EarnCreditsModal({
       `I just used IdeaPilot to evaluate my product’s business value.\nIt shows how my website can make money, who would pay for it, and which advantages to amplify.\nTry it: ${referralLink}`
     );
     window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
-    handleClaim('share', 10, 'Shared validation results on X/Twitter', false);
+    handleClaim('share_x', 10, 'Shared validation results on X/Twitter', false);
   };
 
   // Status checks for disabling/stamping completed indicators
