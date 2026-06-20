@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Check, Copy, Award, AlertCircle } from 'lucide-react';
 import { CreditState } from '../types/audit';
 import { claimGrowthReward } from '../lib/credits';
+import { useI18n } from '../i18n';
 
 interface EarnCreditsModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export default function EarnCreditsModal({
   creditState,
   setCreditState,
 }: EarnCreditsModalProps) {
+  const { t } = useI18n();
   const [feedback, setFeedback] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -31,7 +33,13 @@ export default function EarnCreditsModal({
     if (res.success) {
       setCreditState(res.state);
     } else {
-      setErrorMsg(res.error || 'Failed to claim reward.');
+      let localizedError = res.error || 'Failed to claim reward.';
+      if (res.errorCode === 'TASK_ALREADY_COMPLETED') {
+        localizedError = t.errors.alreadyCompleted;
+      } else if (res.errorCode === 'DAILY_LIMIT_REACHED') {
+        localizedError = t.errors.dailyLimitReached;
+      }
+      setErrorMsg(localizedError);
     }
   };
 
@@ -57,9 +65,7 @@ export default function EarnCreditsModal({
   };
 
   const shareOnX = () => {
-    const text = encodeURIComponent(
-      `I just used IdeaPilot to evaluate my product’s business value.\nIt shows how my website can make money, who would pay for it, and which advantages to amplify.\nTry it: ${referralLink}`
-    );
+    const text = encodeURIComponent(`${t.share.xText}${referralLink}`);
     window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
     handleClaim('share_x', 10, 'Shared validation results on X/Twitter', false);
   };
@@ -84,11 +90,11 @@ export default function EarnCreditsModal({
           <div className="flex items-center gap-2">
             <Award className="h-6 w-6 text-indigo-400" />
             <h3 className="text-xl font-display font-black text-white uppercase tracking-tight">
-              Earn Pilot Credits
+              {t.credits.earnCredits}
             </h3>
           </div>
           <p className="text-xs text-slate-400">
-            Complete quick daily and growth tasks to unlock advanced startup business reviews.
+            {t.credits.earnCreditsDesc}
           </p>
         </div>
 
@@ -105,9 +111,11 @@ export default function EarnCreditsModal({
           {/* Check-in */}
           <div className="p-4 bg-slate-950 border border-slate-850 rounded-2xl flex items-center justify-between gap-4">
             <div>
-              <span className="text-[10px] text-indigo-400 font-mono uppercase font-bold">Task 1: Daily Check-in</span>
-              <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">Claim Daily Check-in Credits</h4>
-              <p className="text-[11px] text-slate-400 font-sans mt-0.5">Log in once a day to secure 5 credits.</p>
+              <span className="text-[10px] text-indigo-400 font-mono uppercase font-bold">{t.credits.dailyCheckin}</span>
+              <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">
+                {t.credits.dailyCheckinTitle}
+              </h4>
+              <p className="text-[11px] text-slate-400 font-sans mt-0.5">{t.credits.dailyCheckinDesc}</p>
             </div>
             <button
               onClick={() => handleClaim('daily_checkin', 5, 'Daily check-in reward', false)}
@@ -118,16 +126,18 @@ export default function EarnCreditsModal({
                   : 'bg-indigo-600 hover:bg-indigo-500 text-white'
               }`}
             >
-              {isCheckedInToday ? 'Claimed' : '+5 Credits'}
+              {isCheckedInToday ? t.common.claimed : `+5 ${t.common.credits}`}
             </button>
           </div>
 
           {/* Share on X */}
           <div className="p-4 bg-slate-950 border border-slate-850 rounded-2xl flex items-center justify-between gap-4">
             <div>
-              <span className="text-[10px] text-indigo-400 font-mono uppercase font-bold">Task 2: Spread the Word</span>
-              <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">Share IdeaPilot on X / Twitter</h4>
-              <p className="text-[11px] text-slate-400 font-sans mt-0.5">Share your reference url on Twitter daily.</p>
+              <span className="text-[10px] text-indigo-400 font-mono uppercase font-bold">{t.credits.shareOnX}</span>
+              <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">
+                {t.credits.shareOnXTitle}
+              </h4>
+              <p className="text-[11px] text-slate-400 font-sans mt-0.5">{t.credits.shareOnXDesc}</p>
             </div>
             <button
               onClick={shareOnX}
@@ -138,7 +148,7 @@ export default function EarnCreditsModal({
                   : 'bg-indigo-600 hover:bg-indigo-500 text-white'
               }`}
             >
-              {isSharedToday ? 'Claimed' : '+10 Credits'}
+              {isSharedToday ? t.common.claimed : `+10 ${t.common.credits}`}
             </button>
           </div>
 
@@ -146,9 +156,9 @@ export default function EarnCreditsModal({
           <div className="p-4 bg-slate-950 border border-slate-850 rounded-2xl space-y-3">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <span className="text-[10px] text-indigo-400 font-mono uppercase font-bold">Task 3: Referral invite</span>
-                <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">Invite a Builder</h4>
-                <p className="text-[11px] text-slate-400 font-sans mt-0.5">Share your referral link with other founders.</p>
+                <span className="text-[10px] text-indigo-400 font-mono uppercase font-bold">{t.credits.inviteBuilder}</span>
+                <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">{t.credits.referralTitle}</h4>
+                <p className="text-[11px] text-slate-400 font-sans mt-0.5">{t.credits.inviteBuilderDesc}</p>
               </div>
               <button
                 onClick={copyReferralLink}
@@ -164,12 +174,12 @@ export default function EarnCreditsModal({
                 {isCopied ? (
                   <>
                     <Check className="h-3 w-3" />
-                    <span>Copied!</span>
+                    <span>{t.common.copied}</span>
                   </>
                 ) : (
                   <>
                     <Copy className="h-3 w-3" />
-                    <span>{isInvitedClaimed ? 'Copy Invite Link' : '+20 Credits'}</span>
+                    <span>{isInvitedClaimed ? t.credits.copyInviteLink : `+20 ${t.common.credits}`}</span>
                   </>
                 )}
               </button>
@@ -182,9 +192,9 @@ export default function EarnCreditsModal({
           {/* Feedback Form */}
           <div className="p-4 bg-slate-950 border border-slate-850 rounded-2xl space-y-3">
             <div>
-              <span className="text-[10px] text-indigo-400 font-mono uppercase font-bold">Task 4: User Feedback</span>
-              <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">Submit Feedback</h4>
-              <p className="text-[11px] text-slate-400 font-sans mt-0.5">Provide a suggestion to improve the evaluation engine.</p>
+              <span className="text-[10px] text-indigo-400 font-mono uppercase font-bold">{t.credits.submitFeedback}</span>
+              <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">{t.credits.feedbackTitle}</h4>
+              <p className="text-[11px] text-slate-400 font-sans mt-0.5">{t.credits.submitFeedbackDesc}</p>
             </div>
             
             <form onSubmit={submitFeedback} className="flex gap-2">
@@ -192,9 +202,9 @@ export default function EarnCreditsModal({
                 type="text"
                 value={feedback}
                 disabled={isFeedbackSubmitted}
-                placeholder={isFeedbackSubmitted ? "Feedback submitted. Thank you!" : "What should we add or improve next?"}
+                placeholder={isFeedbackSubmitted ? t.credits.feedbackSubmitted : t.credits.feedbackPlaceholder}
                 onChange={(e) => setFeedback(e.target.value)}
-                className="flex-grow p-2.5 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 placeholder-slate-600 focus:outline-none transition disabled:opacity-50"
+                className="flex-grow p-2.5 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 placeholder-slate-650 focus:outline-none transition disabled:opacity-50"
               />
               <button
                 type="submit"
@@ -205,7 +215,7 @@ export default function EarnCreditsModal({
                     : 'bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer'
                 }`}
               >
-                {isFeedbackSubmitted ? 'Submitted' : '+8 Credits'}
+                {isFeedbackSubmitted ? t.common.submitted : `+8 ${t.common.credits}`}
               </button>
             </form>
           </div>

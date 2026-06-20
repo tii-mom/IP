@@ -6,6 +6,7 @@ export interface AnalyzeRequest {
   analysisMode: 'quick_scan' | 'single_mentor' | 'mentor_board';
   selectedMentors: string[];
   turnstileToken?: string;
+  language?: 'en' | 'zh-CN';
 }
 
 export interface BusinessMetrics {
@@ -68,6 +69,7 @@ export interface BusinessAuditResult {
   url: string;
   score: number;
   grade: 'S' | 'A' | 'B' | 'C' | 'D';
+  language?: 'en' | 'zh-CN';
   summary: {
     oneSentenceDiagnosis: string;
     biggestOpportunity: string;

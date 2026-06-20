@@ -8,7 +8,8 @@ export async function handleAnalyzeRoute(request: Request, env: Env): Promise<Re
 
   try {
     const body: any = await request.json();
-    const { url, projectType, audience, details, analysisMode, selectedMentors, turnstileToken } = body;
+    const { url, projectType, audience, details, analysisMode, selectedMentors, turnstileToken, language } = body;
+    const reqLanguage = language === 'zh-CN' ? 'zh-CN' : 'en';
 
     if (!url) {
       return new Response(JSON.stringify({ error: 'Project landing page URL is required.' }), {
@@ -45,7 +46,8 @@ export async function handleAnalyzeRoute(request: Request, env: Env): Promise<Re
       details,
       analysisMode || 'quick_scan',
       selectedMentors || [],
-      env
+      env,
+      reqLanguage
     );
 
     return new Response(JSON.stringify(report), {

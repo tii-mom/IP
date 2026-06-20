@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { BusinessAuditResult } from '../types/audit';
+import { useI18n } from '../i18n';
 
 interface CertificateModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export default function CertificateModal({
   setCertificateTheme,
 }: CertificateModalProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { t, language } = useI18n();
 
   const handleGenerateAndDownloadCertificate = () => {
     const canvas = canvasRef.current;
@@ -111,25 +113,38 @@ export default function CertificateModal({
     ctx.lineTo(1100, 635);
     ctx.stroke();
 
+    // Font setting fallback based on language selection
+    const sansFont = language === 'zh-CN'
+      ? 'system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif'
+      : '"Space Grotesk", sans-serif';
+
+    const monoFont = 'monospace';
+
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 32px "Space Grotesk", sans-serif';
+    ctx.font = `bold 32px ${sansFont}`;
     ctx.fillText('IdeaPilot', 80, 100);
 
     ctx.fillStyle = accentColor;
-    ctx.font = 'bold 14px monospace';
-    ctx.fillText('• COMMERCIAL VALIDATION LABS', 230, 95);
+    ctx.font = `bold 14px ${monoFont}`;
+    ctx.fillText(language === 'zh-CN' ? '• 商业价值验证实验室' : '• COMMERCIAL VALIDATION LABS', 230, 95);
 
     ctx.fillStyle = '#64748b';
-    ctx.font = '14px monospace';
+    ctx.font = `14px ${monoFont}`;
     ctx.fillText(`ID PIN: IP-${auditResult.projectName.toUpperCase().substring(0, 3)}-2026`, 940, 95);
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = '800 48px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('STARTUP MONETIZATION CERTIFICATE', 80, 210);
+    ctx.font = `800 44px ${sansFont}`;
+    ctx.fillText(language === 'zh-CN' ? '项目商业化评估证书' : 'STARTUP MONETIZATION CERTIFICATE', 80, 210);
 
     ctx.fillStyle = '#94a3b8';
-    ctx.font = '20px sans-serif';
-    ctx.fillText('This official seal verifies the landing page conversion and monetization potential audit for:', 80, 260);
+    ctx.font = `20px ${sansFont}`;
+    ctx.fillText(
+      language === 'zh-CN'
+        ? '官方验证印章确认以下网页的转化与商业变现能力评估：'
+        : 'This official seal verifies the landing page conversion and monetization potential audit for:',
+      80,
+      260
+    );
 
     ctx.fillStyle = badgeBg;
     ctx.fillRect(80, 290, 700, 60);
@@ -137,7 +152,7 @@ export default function CertificateModal({
     ctx.strokeRect(80, 290, 700, 60);
 
     ctx.fillStyle = '#22d3ee';
-    ctx.font = 'bold 24px monospace';
+    ctx.font = `bold 24px ${monoFont}`;
     ctx.fillText(targetUrl, 105, 330);
 
     ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
@@ -146,13 +161,13 @@ export default function CertificateModal({
     ctx.strokeRect(840, 170, 280, 340);
 
     ctx.fillStyle = brandColor;
-    ctx.font = '800 120px "Space Grotesk", sans-serif';
+    ctx.font = `800 120px ${sansFont}`;
     ctx.textAlign = 'center';
     ctx.fillText(dynamicGrade, 980, 310);
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 18px "Space Grotesk", sans-serif';
-    ctx.fillText(`SCORE: ${dynamicallyAdjustedScore} / 100`, 980, 370);
+    ctx.font = `bold 18px ${sansFont}`;
+    ctx.fillText(`${language === 'zh-CN' ? '评分' : 'SCORE'}: ${dynamicallyAdjustedScore} / 100`, 980, 370);
 
     ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
     ctx.fillRect(880, 400, 200, 8);
@@ -161,17 +176,22 @@ export default function CertificateModal({
 
     ctx.textAlign = 'left';
     ctx.fillStyle = '#94a3b8';
-    ctx.font = '14px monospace';
-    ctx.fillText(`• Comm Value: ${auditResult.metrics.commercialValue}%`, 880, 440);
-    ctx.fillText(`• Painkiller Index: ${auditResult.metrics.painkillerIndex}%`, 880, 465);
-    ctx.fillText(`• Monetization: ${auditResult.metrics.monetizationClarity}%`, 880, 490);
+    ctx.font = `14px ${monoFont}`;
+
+    const lComm = language === 'zh-CN' ? '商业价值' : 'Comm Value';
+    const lPain = language === 'zh-CN' ? '痛点指数' : 'Painkiller';
+    const lMone = language === 'zh-CN' ? '变现清晰' : 'Monetization';
+
+    ctx.fillText(`• ${lComm}: ${auditResult.metrics.commercialValue}%`, 880, 440);
+    ctx.fillText(`• ${lPain}: ${auditResult.metrics.painkillerIndex}%`, 880, 465);
+    ctx.fillText(`• ${lMone}: ${auditResult.metrics.monetizationClarity}%`, 880, 490);
 
     ctx.fillStyle = '#64748b';
-    ctx.font = '15px monospace';
-    ctx.fillText('ISSUED BY IDEAPILOT GPT EVALUATION SUITE', 80, 470);
+    ctx.font = `15px ${monoFont}`;
+    ctx.fillText(language === 'zh-CN' ? '由 IDEAPILOT GPT 评估套件签发' : 'ISSUED BY IDEAPILOT GPT EVALUATION SUITE', 80, 470);
 
     ctx.fillStyle = brandColor;
-    ctx.font = 'bold 16px monospace';
+    ctx.font = `bold 16px ${monoFont}`;
     ctx.fillText('ideapilot.com/audit', 80, 500);
 
     ctx.strokeStyle = accentColor;
@@ -180,8 +200,8 @@ export default function CertificateModal({
     ctx.arc(480, 480, 40, 0, Math.PI * 2);
     ctx.stroke();
     ctx.fillStyle = accentColor;
-    ctx.font = 'bold 10px monospace';
-    ctx.fillText('VERIFIED', 455, 483);
+    ctx.font = `bold 10px ${monoFont}`;
+    ctx.fillText(language === 'zh-CN' ? '已验证' : 'VERIFIED', language === 'zh-CN' ? 465 : 455, 483);
 
     try {
       const dataUrl = canvas.toDataURL('image/png');
@@ -217,10 +237,10 @@ export default function CertificateModal({
 
         <div className="space-y-2">
           <h3 className="text-xl sm:text-2xl font-display font-black text-white uppercase tracking-tight">
-            Generating Dynamic Certificate
+            {t.certificate.title}
           </h3>
           <p className="text-xs sm:text-sm text-slate-400">
-            Customize theme profile matching brand styling prior to distribution.
+            {t.certificate.subtitle}
           </p>
         </div>
 
@@ -251,22 +271,22 @@ export default function CertificateModal({
 
           <div className="space-y-4 bg-slate-950/60 border border-slate-850 p-5 rounded-2xl text-slate-300">
             <h4 className="text-xs font-bold font-mono text-slate-400 uppercase tracking-wider">
-              Verification Stats
+              {t.certificate.verificationStats}
             </h4>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between font-mono">
-                <span>Score:</span>
+                <span>{t.certificate.score}:</span>
                 <span className="text-white font-bold">{dynamicallyAdjustedScore}/100</span>
               </div>
               <div className="flex justify-between font-mono">
-                <span>Grade:</span>
+                <span>{t.certificate.grade}:</span>
                 <span className="text-white font-bold">{dynamicGrade}</span>
               </div>
               <hr className="border-slate-900" />
               <div className="space-y-2 text-xs font-mono text-slate-400">
-                <p>• Comm Value: {auditResult.metrics.commercialValue}%</p>
-                <p>• Painkiller: {auditResult.metrics.painkillerIndex}%</p>
-                <p>• Monetization: {auditResult.metrics.monetizationClarity}%</p>
+                <p>• {t.report.metricLabels.commercialValue}: {auditResult.metrics.commercialValue}%</p>
+                <p>• {t.report.metricLabels.painkillerIndex}: {auditResult.metrics.painkillerIndex}%</p>
+                <p>• {t.report.metricLabels.monetizationClarity}: {auditResult.metrics.monetizationClarity}%</p>
               </div>
             </div>
 
@@ -274,7 +294,7 @@ export default function CertificateModal({
               onClick={handleGenerateAndDownloadCertificate}
               className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold font-mono transition"
             >
-              Download PNG
+              {t.certificate.downloadPng}
             </button>
           </div>
         </div>

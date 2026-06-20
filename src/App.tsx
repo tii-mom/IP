@@ -16,7 +16,20 @@ import ReportPage from './pages/ReportPage';
 import CertificateModal from './components/CertificateModal';
 import EarnCreditsModal from './components/EarnCreditsModal';
 
+import { LanguageProvider, useI18n } from './i18n';
+import LanguageToggle from './components/LanguageToggle';
+
 export default function App() {
+  return (
+    <LanguageProvider>
+      <AppShell />
+    </LanguageProvider>
+  );
+}
+
+function AppShell() {
+  const { t, language } = useI18n();
+
   const [currentView, setCurrentView] = useState<'home' | 'analyzing' | 'report'>('home');
 
   const [targetUrl, setTargetUrl] = useState('');
@@ -105,12 +118,12 @@ export default function App() {
     setLogProgress(0);
 
     const initialLogs = [
-      '⚡ [0.1s] Initiating secure sandbox crawler channel...',
-      '🌐 [0.4s] Connecting to target URL apex domain...',
-      '🔍 [0.8s] Requesting HTML payload and structural metadata...',
-      '📈 [1.4s] Running business metrics evaluation model...',
-      `🤖 [2.0s] Booting up selected AI Mentor Board review lenses...`,
-      '🤖 [2.7s] Querying DeepSeek V4 Flash co-pilot context...',
+      `⚡ [0.1s] ${t.loadingLogs.initiating}`,
+      `🌐 [0.4s] ${t.loadingLogs.connecting}`,
+      `🔍 [0.8s] ${t.loadingLogs.requesting}`,
+      `📈 [1.4s] ${t.loadingLogs.running}`,
+      `🤖 [2.0s] ${t.loadingLogs.booting}`,
+      `🤖 [2.7s] ${t.loadingLogs.querying}`,
     ];
 
     let logIndex = 0;
@@ -131,15 +144,16 @@ export default function App() {
         audience: targetAudience,
         details: additionalDetails,
         analysisMode,
-        selectedMentors
+        selectedMentors,
+        language
       });
 
       setTimeout(() => {
         setTerminalLogs((prev) => [
           ...prev,
-          '✅ [3.5s] Business parameters parsed successfully!',
-          '📊 [3.8s] Compiling mentor board consensus reviews...',
-          '🚀 [4.0s] Audit compilation complete!',
+          `✅ [3.5s] ${t.loadingLogs.parsed}`,
+          `📊 [3.8s] ${t.loadingLogs.compiling}`,
+          `🚀 [4.0s] ${t.loadingLogs.complete}`,
         ]);
         setLogProgress(100);
 
@@ -156,7 +170,11 @@ export default function App() {
       const refundedState = refundCredits(cost, `Refund for failed API scan: ${err.message}`);
       setCreditState(refundedState);
 
-      setErrorMessage(err.message || 'Auditing failed');
+      const displayError = language === 'zh-CN' && err.message === 'Our co-pilot server encountered an auditing error. Please try again.'
+        ? t.errors.analyzeFailed
+        : (err.message || t.errors.analyzeFailed);
+
+      setErrorMessage(displayError);
       setCurrentView('home');
     }
   };
@@ -185,7 +203,7 @@ export default function App() {
                 className="text-xs text-slate-400 hover:text-white font-mono flex items-center gap-1.5 transition py-1 px-3 border border-slate-800 hover:bg-slate-900 rounded-lg cursor-pointer"
               >
                 <RefreshCcw className="h-3 w-3" />
-                <span>New Audit</span>
+                <span>{t.common.newAudit}</span>
               </button>
             )}
             <a
@@ -194,8 +212,9 @@ export default function App() {
               rel="noreferrer"
               className="text-xs text-slate-400 hover:text-white transition font-mono"
             >
-              Docs
+              {t.common.docs}
             </a>
+            <LanguageToggle />
           </div>
         </div>
       </header>
@@ -288,14 +307,14 @@ export default function App() {
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto p-4 sm:p-10">
           <div className="max-w-4xl mx-auto bg-white text-slate-900 rounded-2xl overflow-hidden shadow-2xl relative">
             <div className="p-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between print-hide">
-              <span className="text-xs text-slate-600 font-mono uppercase font-bold">Print PDF Board</span>
+              <span className="text-xs text-slate-600 font-mono uppercase font-bold">{t.report.printBoard}</span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => window.print()}
                   className="py-1.5 px-3.5 bg-indigo-600 text-white hover:bg-indigo-500 rounded-lg text-xs font-semibold font-mono flex items-center gap-1.5 cursor-pointer"
                 >
                   <Printer className="h-3.5 w-3.5" />
-                  <span>Execute Print</span>
+                  <span>{t.report.executePrint}</span>
                 </button>
                 <button
                   onClick={() => setIsPrintModalOpen(false)}
@@ -313,19 +332,19 @@ export default function App() {
                     ★ IDEAPILOT AI EXECUTIVE BRIEFING
                   </span>
                   <h1 className="font-display font-black text-2xl uppercase tracking-tight text-slate-900">
-                    Startup Business Audit Report
+                    {t.report.auditTitle}
                   </h1>
                 </div>
                 <div className="text-right text-xs text-slate-500 font-mono leading-relaxed">
-                  <div>DATE: {new Date().toLocaleDateString()}</div>
-                  <div>SCAN ID: IP-{auditResult.projectName.toUpperCase().substring(0, 3)}-2026</div>
+                  <div>DATE: {new Date().toLocaleDateString(language === 'zh-CN' ? 'zh-CN' : 'en-US')}</div>
+                  <div>{t.report.scanId} IP-{auditResult.projectName.toUpperCase().substring(0, 3)}-2026</div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                 <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
                   <span className="text-[10px] text-slate-500 font-mono tracking-wider block leading-none">
-                    BUSINESS VALUE SCORE:
+                    {t.report.businessValueScore.toUpperCase()}:
                   </span>
                   <span className="text-2xl font-black text-slate-900 block font-mono">
                     {auditResult.score} / 100
@@ -333,7 +352,7 @@ export default function App() {
                 </div>
                 <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
                   <span className="text-[10px] text-slate-500 font-mono tracking-wider block leading-none">
-                    GRADE:
+                    {t.report.grade}:
                   </span>
                   <span className="text-2xl font-black text-indigo-700 block font-mono">
                     {auditResult.grade} RANK
@@ -342,24 +361,24 @@ export default function App() {
               </div>
 
               <div className="space-y-3">
-                <span className="text-xs text-slate-500 font-mono uppercase block font-bold">Diagnostics summary:</span>
+                <span className="text-xs text-slate-500 font-mono uppercase block font-bold">{t.report.mentorDiagnosis}:</span>
                 <p className="text-sm italic">{auditResult.summary.oneSentenceDiagnosis}</p>
-                <p className="text-xs text-slate-700">Recommended positioning: {auditResult.summary.recommendedPositioning}</p>
+                <p className="text-xs text-slate-700">{t.report.recommendedPositioning}: {auditResult.summary.recommendedPositioning}</p>
               </div>
 
               <div className="space-y-3">
-                <span className="text-xs text-slate-500 font-mono uppercase block font-bold">Suggested Money Paths:</span>
+                <span className="text-xs text-slate-500 font-mono uppercase block font-bold">{t.report.moneyPaths}:</span>
                 <ul className="space-y-2 text-xs">
                   {auditResult.moneyPaths.map((path, idx) => (
                     <li key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
-                      <span className="font-bold">{path.name} ({path.model}):</span> {path.whyItFits} (Suggested offer: {path.suggestedPriceOrValueExchange})
+                      <span className="font-bold">{path.name} ({path.model}):</span> {path.whyItFits} ({t.report.offerSuggestion} {path.suggestedPriceOrValueExchange})
                     </li>
                   ))}
                 </ul>
               </div>
 
               <div className="border-t border-slate-200 pt-5 text-[10px] font-mono text-slate-400 flex justify-between select-none print-avoid-break">
-                <span>© 2026 IdeaPilot AI Mentor Board. Printed Copy.</span>
+                <span>{t.report.printedCopy}</span>
               </div>
             </div>
           </div>
