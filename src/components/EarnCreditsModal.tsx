@@ -25,7 +25,7 @@ export default function EarnCreditsModal({
   if (!isOpen) return null;
 
   const today = new Date().toLocaleDateString();
-  const referralLink = `https://app.ideapilot.com?ref=${creditState.inviteCode}`;
+  const referralLink = `https://bige.life?ref=${creditState.inviteCode}`;
 
   const handleClaim = (taskId: string, reward: number, desc: string, once: boolean = false) => {
     setErrorMsg(null);

@@ -192,7 +192,7 @@ export default function CertificateModal({
 
     ctx.fillStyle = brandColor;
     ctx.font = `bold 16px ${monoFont}`;
-    ctx.fillText('ideapilot.com/audit', 80, 500);
+    ctx.fillText('bige.life/audit', 80, 500);
 
     ctx.strokeStyle = accentColor;
     ctx.lineWidth = 1;
