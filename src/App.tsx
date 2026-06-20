@@ -3,8 +3,7 @@ import {
   Zap,
   RefreshCcw,
   Info,
-  X,
-  Printer
+  X
 } from 'lucide-react';
 
 import { BusinessAuditResult, CreditState } from './types/audit';
@@ -13,7 +12,7 @@ import { loadCreditState, spendCredits, refundCredits } from './lib/credits';
 import HomePage from './pages/HomePage';
 import AnalyzingPage from './pages/AnalyzingPage';
 import ReportPage from './pages/ReportPage';
-import CertificateModal from './components/CertificateModal';
+import SocialShareCardModal from './components/SocialShareCardModal';
 import EarnCreditsModal from './components/EarnCreditsModal';
 
 import { LanguageProvider, useI18n } from './i18n';
@@ -55,10 +54,7 @@ function AppShell() {
   const [analysisMode, setAnalysisMode] = useState<'quick_scan' | 'single_mentor' | 'mentor_board'>('quick_scan');
   const [selectedMentors, setSelectedMentors] = useState<string[]>(['naval_ravikant']);
 
-  const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
-  const [certificateTheme, setCertificateTheme] = useState<'neon' | 'cyberpunk' | 'sunset' | 'slate'>('slate');
-
-  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
   const [logProgress, setLogProgress] = useState(0);
@@ -262,8 +258,7 @@ function AppShell() {
             setCalcMonthlyTraffic={setCalcMonthlyTraffic}
             calcAOV={calcAOV}
             setCalcAOV={setCalcAOV}
-            setIsPrintModalOpen={setIsPrintModalOpen}
-            setIsCertificateModalOpen={setIsCertificateModalOpen}
+            setIsShareModalOpen={setIsShareModalOpen}
             handleReset={handleReset}
           />
         )}
@@ -283,15 +278,13 @@ function AppShell() {
 
       {/* MODALS */}
       {auditResult && (
-        <CertificateModal
-          isOpen={isCertificateModalOpen}
-          onClose={() => setIsCertificateModalOpen(false)}
+        <SocialShareCardModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
           auditResult={auditResult}
           targetUrl={targetUrl}
           dynamicallyAdjustedScore={auditResult.score}
           dynamicGrade={auditResult.grade}
-          certificateTheme={certificateTheme}
-          setCertificateTheme={setCertificateTheme}
         />
       )}
 
@@ -301,89 +294,6 @@ function AppShell() {
         creditState={creditState}
         setCreditState={setCreditState}
       />
-
-      {/* PRINT OVERLAY */}
-      {isPrintModalOpen && auditResult && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 overflow-y-auto p-4 sm:p-10">
-          <div className="max-w-4xl mx-auto bg-white text-slate-900 rounded-2xl overflow-hidden shadow-2xl relative">
-            <div className="p-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between print-hide">
-              <span className="text-xs text-slate-600 font-mono uppercase font-bold">{t.report.printBoard}</span>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => window.print()}
-                  className="py-1.5 px-3.5 bg-indigo-600 text-white hover:bg-indigo-500 rounded-lg text-xs font-semibold font-mono flex items-center gap-1.5 cursor-pointer"
-                >
-                  <Printer className="h-3.5 w-3.5" />
-                  <span>{t.report.executePrint}</span>
-                </button>
-                <button
-                  onClick={() => setIsPrintModalOpen(false)}
-                  className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-200 rounded-lg transition cursor-pointer"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-
-            <div className="p-10 space-y-10 font-sans print-full">
-              <div className="border-b-4 border-slate-900 pb-5 mb-6 flex items-end justify-between">
-                <div>
-                  <span className="text-[10px] text-indigo-700 font-mono tracking-widest block font-bold leading-none mb-2">
-                    ★ IDEAPILOT AI EXECUTIVE BRIEFING
-                  </span>
-                  <h1 className="font-display font-black text-2xl uppercase tracking-tight text-slate-900">
-                    {t.report.auditTitle}
-                  </h1>
-                </div>
-                <div className="text-right text-xs text-slate-500 font-mono leading-relaxed">
-                  <div>DATE: {new Date().toLocaleDateString(language === 'zh-CN' ? 'zh-CN' : 'en-US')}</div>
-                  <div>{t.report.scanId} IP-{auditResult.projectName.toUpperCase().substring(0, 3)}-2026</div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                  <span className="text-[10px] text-slate-500 font-mono tracking-wider block leading-none">
-                    {t.report.businessValueScore.toUpperCase()}:
-                  </span>
-                  <span className="text-2xl font-black text-slate-900 block font-mono">
-                    {auditResult.score} / 100
-                  </span>
-                </div>
-                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                  <span className="text-[10px] text-slate-500 font-mono tracking-wider block leading-none">
-                    {t.report.grade}:
-                  </span>
-                  <span className="text-2xl font-black text-indigo-700 block font-mono">
-                    {auditResult.grade} RANK
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <span className="text-xs text-slate-500 font-mono uppercase block font-bold">{t.report.mentorDiagnosis}:</span>
-                <p className="text-sm italic">{auditResult.summary.oneSentenceDiagnosis}</p>
-                <p className="text-xs text-slate-700">{t.report.recommendedPositioning}: {auditResult.summary.recommendedPositioning}</p>
-              </div>
-
-              <div className="space-y-3">
-                <span className="text-xs text-slate-500 font-mono uppercase block font-bold">{t.report.moneyPaths}:</span>
-                <ul className="space-y-2 text-xs">
-                  {auditResult.moneyPaths.map((path, idx) => (
-                    <li key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
-                      <span className="font-bold">{path.name} ({path.model}):</span> {path.whyItFits} ({t.report.offerSuggestion} {path.suggestedPriceOrValueExchange})
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="border-t border-slate-200 pt-5 text-[10px] font-mono text-slate-400 flex justify-between select-none print-avoid-break">
-                <span>{t.report.printedCopy}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

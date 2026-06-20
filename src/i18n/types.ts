@@ -157,14 +157,23 @@ export interface TranslationDictionary {
     complete: string;
     multiFactor: string;
   };
-  certificate: {
+  shareCard: {
     title: string;
     subtitle: string;
-    verificationStats: string;
-    issuedBy: string;
-    verified: string;
+    generate: string;
     downloadPng: string;
-    score: string;
+    share: string;
+    copyCaption: string;
+    copied: string;
+    projectUrl: string;
+    businessValueScore: string;
     grade: string;
+    recommendedPositioning: string;
+    biggestOpportunity: string;
+    platformIntro: string;
+    printing: string;
+    ready: string;
+    shareFallbackNotice: string;
+    manualUploadHint: string;
   };
 }

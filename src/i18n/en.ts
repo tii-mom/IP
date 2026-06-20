@@ -160,14 +160,23 @@ export const en: TranslationDictionary = {
     complete: 'Audit compilation complete!',
     multiFactor: 'Running multi-factor analysis...'
   },
-  certificate: {
-    title: 'Generating Dynamic Certificate',
-    subtitle: 'Customize theme profile matching brand styling prior to distribution.',
-    verificationStats: 'Verification Stats',
-    issuedBy: 'ISSUED BY IDEAPILOT GPT EVALUATION SUITE',
-    verified: 'VERIFIED',
+  shareCard: {
+    title: 'IdeaPilot Social Share Card',
+    subtitle: 'Generate a high-quality preview of your project business audit report.',
+    generate: 'Generate Share Card',
     downloadPng: 'Download PNG',
-    score: 'SCORE',
-    grade: 'GRADE'
+    share: 'Share',
+    copyCaption: 'Copy Caption',
+    copied: 'Copied!',
+    projectUrl: 'Project URL',
+    businessValueScore: 'Business Value Score',
+    grade: 'Grade',
+    recommendedPositioning: 'Recommended Positioning',
+    biggestOpportunity: 'Biggest Opportunity',
+    platformIntro: 'IdeaPilot: An AI business mentor board for indie builders to find monetization paths, target buyers, and growth leverage.',
+    printing: 'Generating Report...',
+    ready: 'Preview Ready',
+    shareFallbackNotice: 'Caption copied and PNG download started! Since browser sharing limits image attachments, please upload the image manually.',
+    manualUploadHint: 'Image downloaded. Caption copied. Please upload manually to X / Twitter.'
   }
 };
