@@ -114,18 +114,18 @@ export function claimGrowthReward(
   reward: number,
   description: string,
   allowOnce: boolean = false
-): { success: boolean; state: CreditState; error?: string } {
+): { success: boolean; state: CreditState; error?: string; errorCode?: 'TASK_ALREADY_COMPLETED' | 'DAILY_LIMIT_REACHED' } {
   const state = loadCreditState();
   const today = new Date().toLocaleDateString();
 
   if (allowOnce && state.completedTasks[taskId]) {
-    return { success: false, state, error: 'This task has already been completed.' };
+    return { success: false, state, error: 'This task has already been completed.', errorCode: 'TASK_ALREADY_COMPLETED' };
   }
 
   // Double check tasks checkin or share_x which are daily limited
   if (taskId === 'daily_checkin' || taskId === 'share_x') {
     if (state.completedTasks[taskId] === today) {
-      return { success: false, state, error: 'Daily limit reached for this task today.' };
+      return { success: false, state, error: 'Daily limit reached for this task today.', errorCode: 'DAILY_LIMIT_REACHED' };
     }
     state.completedTasks[taskId] = today;
   } else {

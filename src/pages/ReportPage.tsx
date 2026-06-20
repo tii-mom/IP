@@ -4,9 +4,11 @@ import {
   Printer,
   Share2,
   CheckCircle,
-  AlertTriangle
+  AlertTriangle,
+  Info
 } from 'lucide-react';
 import { BusinessAuditResult, MoneyPath, TargetBuyer, GrowthLever, RiskWarning } from '../types/audit';
+import { useI18n } from '../i18n';
 
 interface ReportPageProps {
   auditResult: BusinessAuditResult;
@@ -30,7 +32,8 @@ export default function ReportPage({
   setIsPrintModalOpen,
   setIsCertificateModalOpen,
 }: ReportPageProps) {
-  
+  const { t, language } = useI18n();
+
   // Dynamic Score Logic based on simple metrics calculation
   const totalScore = auditResult.score;
   const grade = auditResult.grade;
@@ -54,11 +57,11 @@ export default function ReportPage({
               <Layout className="h-4 w-4" />
             </div>
             <h2 className="font-display font-black text-2xl text-white uppercase tracking-tight">
-              {auditResult.projectName} Startup Audit
+              {auditResult.projectName} {t.report.auditTitle}
             </h2>
           </div>
           <div className="flex items-center gap-2 text-xs text-slate-500 font-mono">
-            <span>AUDITED DOMAIN:</span>
+            <span>{t.report.auditedDomain}</span>
             <a
               href={`https://${targetUrl}`}
               target="_blank"
@@ -75,10 +78,10 @@ export default function ReportPage({
         <div className="flex items-center gap-3 w-full md:w-auto">
           <button
             onClick={() => setIsPrintModalOpen(true)}
-            className="flex-1 md:flex-initial py-2 px-4 border border-slate-800 hover:border-slate-700 bg-slate-900/40 hover:bg-slate-900 rounded-xl text-xs text-slate-300 hover:text-white transition font-mono flex items-center justify-center gap-1.5 cursor-pointer"
+            className="flex-1 md:flex-initial py-2 px-4 border border-slate-880 hover:border-slate-700 bg-slate-900/40 hover:bg-slate-900 rounded-xl text-xs text-slate-300 hover:text-white transition font-mono flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <Printer className="h-3.5 w-3.5" />
-            <span>Print PDF Report</span>
+            <span>{t.report.printReport}</span>
           </button>
 
           <button
@@ -86,10 +89,22 @@ export default function ReportPage({
             className="flex-1 md:flex-initial py-2 px-4 bg-indigo-600 hover:bg-indigo-500 hover:glow-indigo text-white rounded-xl text-xs font-semibold font-mono flex items-center justify-center gap-1.5 cursor-pointer transition shadow-lg shadow-indigo-600/15"
           >
             <Share2 className="h-3.5 w-3.5" />
-            <span>Generate Seal Certificate</span>
+            <span>{t.report.genCertificate}</span>
           </button>
         </div>
       </div>
+
+      {/* Language mismatch warning banner */}
+      {auditResult.language && auditResult.language !== language && (
+        <div className="bg-indigo-950/40 border border-indigo-500/20 text-indigo-300 text-xs py-3 px-4 rounded-xl flex items-center gap-2">
+          <Info className="h-4 w-4 text-indigo-400 shrink-0" />
+          <span>
+            {language === 'zh-CN'
+              ? `这份报告是用${auditResult.language === 'zh-CN' ? '中文' : '英文'}生成的。如需中文报告，请重新进行评估。`
+              : `This report was generated in ${auditResult.language === 'zh-CN' ? 'Chinese' : 'English'}. Re-run the audit to generate an English version.`}
+          </span>
+        </div>
+      )}
 
       {/* Overview Diagnosis Panel */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -99,7 +114,7 @@ export default function ReportPage({
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,#312e81,transparent)] opacity-20 pointer-events-none" />
           
           <h3 className="text-[10px] text-slate-400 font-mono uppercase tracking-widest block font-bold mb-4">
-            Business Value Score
+            {t.report.businessValueScore}
           </h3>
 
           <div className="relative h-32 w-32 flex items-center justify-center">
@@ -131,13 +146,13 @@ export default function ReportPage({
                 {totalScore}
               </span>
               <span className="text-[11px] text-slate-400 font-medium font-mono">
-                GRADE {grade}
+                {t.report.grade} {grade}
               </span>
             </div>
           </div>
 
           <p className="text-[10px] text-slate-500 font-mono leading-relaxed mt-4">
-            Assessed based on 7 core variables of independent leverage.
+            {t.report.assessedVariables}
           </p>
         </div>
 
@@ -145,35 +160,35 @@ export default function ReportPage({
         <div className="md:col-span-3 p-6 rounded-2xl bg-slate-900/40 border border-slate-900 space-y-4">
           <div>
             <span className="text-[9.5px] text-indigo-400 font-mono uppercase font-bold tracking-wider">
-              AI Business Mentor Diagnosis
+              {t.report.mentorDiagnosis}
             </span>
-            <h4 className="text-sm font-bold text-white font-mono mt-1">
+            <h4 className="text-sm font-bold text-white font-mono mt-1 font-sans">
               {auditResult.summary.oneSentenceDiagnosis}
             </h4>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-950">
             <div className="space-y-1">
               <span className="text-[9px] text-emerald-400 font-mono uppercase block font-bold">
-                ✓ Biggest Opportunity
+                {t.report.biggestOpportunity}
               </span>
-              <p className="text-xs text-slate-300 leading-relaxed font-sans">
+              <p className="text-xs text-slate-350 leading-relaxed font-sans">
                 {auditResult.summary.biggestOpportunity}
               </p>
             </div>
             <div className="space-y-1">
               <span className="text-[9px] text-rose-400 font-mono uppercase block font-bold">
-                ⚠ Biggest Weakness
+                {t.report.biggestWeakness}
               </span>
-              <p className="text-xs text-slate-300 leading-relaxed font-sans">
+              <p className="text-xs text-slate-350 leading-relaxed font-sans">
                 {auditResult.summary.biggestWeakness}
               </p>
             </div>
           </div>
           <div className="pt-2 border-t border-slate-950">
             <span className="text-[9px] text-cyan-400 font-mono uppercase block font-bold">
-              ★ Recommended positioning
+              {t.report.recommendedPositioning}
             </span>
-            <p className="text-xs text-slate-200 mt-0.5 leading-relaxed font-mono">
+            <p className="text-xs text-slate-200 mt-0.5 leading-relaxed font-sans">
               {auditResult.summary.recommendedPositioning}
             </p>
           </div>
@@ -183,19 +198,18 @@ export default function ReportPage({
       {/* 7 Core Evaluation Metrics */}
       <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-900 space-y-4">
         <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block">
-          7 Core Evaluation Metrics
+          {t.report.sevenMetrics}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
           {Object.entries(auditResult.metrics).map(([metricName, val]) => {
-            // Map camelCase metricName to reader-friendly name
             const labelMap: Record<string, string> = {
-              commercialValue: 'Commercial Value',
-              painkillerIndex: 'Painkiller Index',
-              monetizationClarity: 'Monetization Clarity',
-              targetBuyerFit: 'Target Buyer Fit',
-              advantageAmplification: 'Advantage Amplification',
-              growthLeverage: 'Growth Leverage',
-              executionFeasibility: 'Execution Feasibility'
+              commercialValue: t.report.metricLabels.commercialValue,
+              painkillerIndex: t.report.metricLabels.painkillerIndex,
+              monetizationClarity: t.report.metricLabels.monetizationClarity,
+              targetBuyerFit: t.report.metricLabels.targetBuyerFit,
+              advantageAmplification: t.report.metricLabels.advantageAmplification,
+              growthLeverage: t.report.metricLabels.growthLeverage,
+              executionFeasibility: t.report.metricLabels.executionFeasibility
             };
             return (
               <div key={metricName} className="p-4 rounded-xl bg-slate-950 border border-slate-850 flex flex-col justify-between h-28">
@@ -220,7 +234,7 @@ export default function ReportPage({
         {/* Money Paths */}
         <div className="p-6 rounded-2xl bg-slate-900/40 border border-slate-900 space-y-4">
           <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block">
-            Suggested Money Paths
+            {t.report.moneyPaths}
           </h3>
           <div className="space-y-4">
             {auditResult.moneyPaths.map((path: MoneyPath, index: number) => (
@@ -231,14 +245,14 @@ export default function ReportPage({
                     {path.model}
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 italic">"{path.whyItFits}"</p>
+                <p className="text-xs text-slate-350 italic">"{path.whyItFits}"</p>
                 <div className="grid grid-cols-2 gap-3 pt-2 text-[10px] border-t border-slate-900">
                   <div>
-                    <span className="text-slate-500 block">Offer Suggestion:</span>
+                    <span className="text-slate-500 block">{t.report.offerSuggestion}</span>
                     <span className="text-cyan-400 font-mono font-semibold">{path.suggestedPriceOrValueExchange}</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 block">First Experiment:</span>
+                    <span className="text-slate-500 block">{t.report.firstExperiment}</span>
                     <span className="text-slate-200">{path.firstExperiment}</span>
                   </div>
                 </div>
@@ -250,7 +264,7 @@ export default function ReportPage({
         {/* Target Buyers */}
         <div className="p-6 rounded-2xl bg-slate-900/40 border border-slate-900 space-y-4">
           <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block">
-            Target Buyers Matrix
+            {t.report.targetBuyers}
           </h3>
           <div className="space-y-4">
             {auditResult.targetBuyers.map((buyer: TargetBuyer, index: number) => (
@@ -258,12 +272,12 @@ export default function ReportPage({
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-white font-mono uppercase">{buyer.segment}</span>
                   <span className="text-xs font-mono text-emerald-400">
-                    Willingness: {buyer.willingnessToPay}%
+                    {t.report.willingness}: {buyer.willingnessToPay}%
                   </span>
                 </div>
-                <p className="text-xs text-slate-400">{buyer.whyTheyBuy}</p>
+                <p className="text-xs text-slate-350">{buyer.whyTheyBuy}</p>
                 <div className="pt-2 text-[10px] border-t border-slate-900">
-                  <span className="text-slate-500 block">Best Offer Proposal:</span>
+                  <span className="text-slate-500 block">{t.report.bestOffer}</span>
                   <span className="text-indigo-400 font-mono font-semibold">{buyer.bestOffer}</span>
                 </div>
               </div>
@@ -278,26 +292,26 @@ export default function ReportPage({
         {/* Advantage Map */}
         <div className="p-6 rounded-2xl bg-slate-900/40 border border-slate-900 space-y-4">
           <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block">
-            Advantage Map & Moats
+            {t.report.advantageMap}
           </h3>
           <div className="p-4 bg-slate-950 border border-slate-850 rounded-xl space-y-3">
             <div className="space-y-1">
-              <span className="text-[10px] text-indigo-400 font-mono uppercase block font-bold">Strongest Asset:</span>
+              <span className="text-[10px] text-indigo-400 font-mono uppercase block font-bold">{t.report.strongestAsset}</span>
               <p className="text-xs text-slate-200">{auditResult.advantageMap.strongestAsset}</p>
             </div>
             <div className="space-y-1">
-              <span className="text-[10px] text-cyan-400 font-mono uppercase block font-bold">Hidden Underutilized Asset:</span>
+              <span className="text-[10px] text-cyan-400 font-mono uppercase block font-bold">{t.report.hiddenAsset}</span>
               <p className="text-xs text-slate-200">{auditResult.advantageMap.hiddenAsset}</p>
             </div>
             <div className="space-y-1">
-              <span className="text-[10px] text-amber-500 font-mono uppercase block font-bold">Defensible Moat Potential:</span>
+              <span className="text-[10px] text-amber-500 font-mono uppercase block font-bold">{t.report.moatPotential}</span>
               <p className="text-xs text-slate-200">{auditResult.advantageMap.moatPotential}</p>
             </div>
             <div className="pt-3 border-t border-slate-900 space-y-2">
-              <span className="text-[9.5px] text-slate-500 font-mono uppercase font-bold block">How To Amplify Advantage:</span>
+              <span className="text-[9.5px] text-slate-500 font-mono uppercase font-bold block">{t.report.howToAmplify}</span>
               <ul className="space-y-1.5">
                 {auditResult.advantageMap.howToAmplify.map((item: string, i: number) => (
-                  <li key={i} className="text-xs text-slate-350 flex items-start gap-1.5">
+                  <li key={i} className="text-xs text-slate-300 flex items-start gap-1.5">
                     <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
                     <span>{item}</span>
                   </li>
@@ -310,7 +324,7 @@ export default function ReportPage({
         {/* Growth Levers */}
         <div className="p-6 rounded-2xl bg-slate-900/40 border border-slate-900 space-y-4">
           <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block">
-            Growth Levers & Channels
+            {t.report.growthLevers}
           </h3>
           <div className="space-y-4">
             {auditResult.growthLevers.map((lever: GrowthLever, index: number) => (
@@ -321,9 +335,9 @@ export default function ReportPage({
                     {lever.channel}
                   </span>
                 </div>
-                <p className="text-xs text-slate-455">{lever.whyItWorks}</p>
+                <p className="text-xs text-slate-350">{lever.whyItWorks}</p>
                 <div className="pt-2 text-[10px] border-t border-slate-900">
-                  <span className="text-slate-500 block">First Action Item:</span>
+                  <span className="text-slate-500 block">{t.report.firstActionItem}</span>
                   <span className="text-emerald-400 font-mono font-semibold">{lever.firstAction}</span>
                 </div>
               </div>
@@ -336,10 +350,10 @@ export default function ReportPage({
       <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-900 space-y-4">
         <div className="space-y-1">
           <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block">
-            AI Startup Mentor Board Reviews
+            {t.report.mentorReports}
           </h3>
           <p className="text-[11px] text-slate-500 italic">
-            Reviews generated based on business leader philosophies and operational frameworks.
+            {t.report.mentorReportsDesc}
           </p>
         </div>
 
@@ -360,17 +374,17 @@ export default function ReportPage({
                 </div>
 
                 <div className="bg-slate-900/60 p-3 rounded-lg border border-slate-850">
-                  <span className="text-[9px] text-slate-500 font-mono uppercase font-bold block">Verdict Opinion:</span>
-                  <p className="text-xs text-slate-200 mt-1 leading-relaxed italic">
+                  <span className="text-[9px] text-slate-500 font-mono uppercase font-bold block">{t.report.verdictOpinion}</span>
+                  <p className="text-xs text-slate-200 mt-1 leading-relaxed italic font-sans">
                     "{report.verdict}"
                   </p>
                 </div>
 
                 <div className="space-y-1.5">
-                  <span className="text-[9px] text-indigo-400 font-mono uppercase font-bold block">Key Advisory Advice:</span>
+                  <span className="text-[9px] text-indigo-400 font-mono uppercase font-bold block">{t.report.keyAdvice}</span>
                   <ul className="space-y-1 text-xs text-slate-350">
                     {report.keyAdvice.map((adv, ai) => (
-                      <li key={ai} className="flex items-start gap-1">
+                      <li key={ai} className="flex items-start gap-1 font-sans">
                         <span className="text-indigo-500 select-none">•</span>
                         <span>{adv}</span>
                       </li>
@@ -380,7 +394,7 @@ export default function ReportPage({
               </div>
 
               <div className="pt-3 border-t border-slate-900/60 mt-4">
-                <span className="text-[9px] text-rose-400 font-mono uppercase font-bold block">Detected Blind Spot:</span>
+                <span className="text-[9px] text-rose-400 font-mono uppercase font-bold block">{t.report.blindSpot}</span>
                 <p className="text-xs text-slate-400 font-sans mt-0.5 leading-relaxed font-medium">
                   {report.blindSpot}
                 </p>
@@ -397,13 +411,13 @@ export default function ReportPage({
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-indigo-950/40 pb-5">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-mono text-[9px] uppercase font-bold">
-              💰 Value Lift Calculator
+              💰 {language === 'zh-CN' ? '收益优化计算器' : 'Value Lift Calculator'}
             </div>
             <h3 className="text-lg font-black text-white font-sans uppercase tracking-tight">
-              Pricing Value Leak Calculator
+              {t.report.pricingCalculator}
             </h3>
             <p className="text-xs text-slate-400 font-sans max-w-xl">
-              Simulate traffic acquisition and value captures to see revenue progression estimates.
+              {t.report.calculatorDesc}
             </p>
           </div>
         </div>
@@ -412,9 +426,9 @@ export default function ReportPage({
           <div className="lg:col-span-4 space-y-6">
             <div className="space-y-2">
               <div className="flex items-center justify-between font-mono">
-                <span className="text-xs text-slate-300 font-bold uppercase">Monthly Traffic</span>
+                <span className="text-xs text-slate-300 font-bold uppercase">{t.report.monthlyTraffic}</span>
                 <span className="text-sm font-black text-indigo-400">
-                  {calcMonthlyTraffic.toLocaleString()} / mo
+                  {calcMonthlyTraffic.toLocaleString()} {language === 'zh-CN' ? '次/月' : '/ mo'}
                 </span>
               </div>
               <input
@@ -430,7 +444,7 @@ export default function ReportPage({
 
             <div className="space-y-2">
               <div className="flex items-center justify-between font-mono">
-                <span className="text-xs text-slate-300 font-bold uppercase">Simulated AOV</span>
+                <span className="text-xs text-slate-300 font-bold uppercase">{t.report.simulatedAOV}</span>
                 <span className="text-sm font-black text-cyan-400">
                   ${calcAOV} USD
                 </span>
@@ -450,7 +464,7 @@ export default function ReportPage({
           <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-950/40 border border-slate-800/40 p-6 rounded-2xl">
             <div className="space-y-3 p-4 rounded-xl bg-slate-900/40 border border-slate-850">
               <span className="text-[9.5px] text-rose-400 font-mono uppercase tracking-wider font-bold block">
-                🔴 Baseline Estimate (1.50% CR)
+                {t.report.baselineEstimate}
               </span>
               <div className="space-y-1">
                 <span className="text-lg font-bold text-slate-200 font-mono">
@@ -461,7 +475,7 @@ export default function ReportPage({
 
             <div className="space-y-3 p-4 rounded-xl bg-slate-900/40 border border-slate-850">
               <span className="text-[9.5px] text-emerald-400 font-mono uppercase tracking-wider font-bold block">
-                🟢 Optimised Estimate (2.50% CR)
+                {t.report.optimizedEstimate}
               </span>
               <div className="space-y-1">
                 <span className="text-lg font-bold text-emerald-400 font-mono">
@@ -472,14 +486,14 @@ export default function ReportPage({
 
             <div className="space-y-3 p-4 rounded-xl bg-indigo-950/20 border border-indigo-900/30">
               <span className="text-[9.5px] text-indigo-400 font-mono uppercase tracking-wider font-bold block">
-                💎 Simulated Lift
+                {t.report.simulatedLift}
               </span>
               <div className="space-y-1 flex flex-col justify-between">
                 <span className="text-lg font-bold text-white font-mono font-black">
-                  +${Math.round(monthlyLift).toLocaleString()} /mo
+                  +${Math.round(monthlyLift).toLocaleString()} {language === 'zh-CN' ? '/月' : '/mo'}
                 </span>
                 <span className="text-[10px] text-cyan-400 font-mono">
-                  +${Math.round(annualLift).toLocaleString()} /yr ARR
+                  +${Math.round(annualLift).toLocaleString()} {language === 'zh-CN' ? '/年 ARR' : '/yr ARR'}
                 </span>
               </div>
             </div>
@@ -493,36 +507,36 @@ export default function ReportPage({
         {/* Action Plan */}
         <div className="lg:col-span-2 p-6 rounded-2xl bg-slate-900/40 border border-slate-900 space-y-4">
           <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block">
-            Execution Implementation Plan
+            {t.report.actionPlan}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 bg-slate-950 border border-slate-850 rounded-xl space-y-2">
-              <span className="text-[9px] text-indigo-400 font-mono uppercase block font-bold">🚀 Next 24 Hours</span>
-              <ul className="space-y-1 text-xs text-slate-300">
+              <span className="text-[9px] text-indigo-400 font-mono uppercase block font-bold">{t.report.next24Hours}</span>
+              <ul className="space-y-1 text-xs text-slate-300 font-sans">
                 {auditResult.actionPlan.next24Hours.map((item, i) => (
                   <li key={i}>• {item}</li>
                 ))}
               </ul>
             </div>
             <div className="p-4 bg-slate-950 border border-slate-850 rounded-xl space-y-2">
-              <span className="text-[9px] text-indigo-400 font-mono uppercase block font-bold">📅 Next 7 Days</span>
-              <ul className="space-y-1 text-xs text-slate-300">
+              <span className="text-[9px] text-indigo-400 font-mono uppercase block font-bold">{t.report.next7Days}</span>
+              <ul className="space-y-1 text-xs text-slate-300 font-sans">
                 {auditResult.actionPlan.next7Days.map((item, i) => (
                   <li key={i}>• {item}</li>
                 ))}
               </ul>
             </div>
             <div className="p-4 bg-slate-950 border border-slate-850 rounded-xl space-y-2">
-              <span className="text-[9px] text-indigo-400 font-mono uppercase block font-bold">📆 Next 30 Days</span>
-              <ul className="space-y-1 text-xs text-slate-300">
+              <span className="text-[9px] text-indigo-400 font-mono uppercase block font-bold">{t.report.next30Days}</span>
+              <ul className="space-y-1 text-xs text-slate-300 font-sans">
                 {auditResult.actionPlan.next30Days.map((item, i) => (
                   <li key={i}>• {item}</li>
                 ))}
               </ul>
             </div>
             <div className="p-4 bg-slate-950 border border-slate-850 rounded-xl space-y-2">
-              <span className="text-[9px] text-indigo-400 font-mono uppercase block font-bold">🏆 Next 90 Days</span>
-              <ul className="space-y-1 text-xs text-slate-300">
+              <span className="text-[9px] text-indigo-400 font-mono uppercase block font-bold">{t.report.next90Days}</span>
+              <ul className="space-y-1 text-xs text-slate-300 font-sans">
                 {auditResult.actionPlan.next90Days.map((item, i) => (
                   <li key={i}>• {item}</li>
                 ))}
@@ -534,7 +548,7 @@ export default function ReportPage({
         {/* Risk Warnings */}
         <div className="p-6 rounded-2xl bg-slate-900/40 border border-slate-900 space-y-4">
           <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block">
-            Product Risk Warnings
+            {t.report.riskWarnings}
           </h3>
           <div className="space-y-4">
             {auditResult.riskWarnings.map((risk: RiskWarning, index: number) => (
@@ -542,20 +556,20 @@ export default function ReportPage({
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold text-white font-mono uppercase flex items-center gap-1.5">
                     <AlertTriangle className={`h-3.5 w-3.5 ${risk.severity === 'high' ? 'text-red-500' : 'text-amber-500'}`} />
-                    <span>Risk Alert</span>
+                    <span>{t.report.riskAlert}</span>
                   </span>
                   <span className={`px-2 py-0.5 rounded text-[8px] font-mono uppercase font-bold ${
                     risk.severity === 'high'
                       ? 'bg-red-500/10 text-red-400 border border-red-500/20'
                       : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                   }`}>
-                    {risk.severity} severity
+                    {risk.severity === 'high' ? (language === 'zh-CN' ? '高风险' : 'high severity') : (language === 'zh-CN' ? '中低风险' : 'medium severity')}
                   </span>
                 </div>
                 <p className="text-xs text-slate-300 leading-relaxed font-sans">{risk.risk}</p>
                 <div className="pt-2 text-[10px] border-t border-slate-900">
-                  <span className="text-slate-500 block">Mitigation Fix:</span>
-                  <span className="text-slate-200">{risk.fix}</span>
+                  <span className="text-slate-500 block">{t.report.mitigationFix}</span>
+                  <span className="text-slate-200 font-sans">{risk.fix}</span>
                 </div>
               </div>
             ))}

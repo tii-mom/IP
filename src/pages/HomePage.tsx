@@ -2,6 +2,7 @@ import React from 'react';
 import { Sparkles } from 'lucide-react';
 import MentorSelector from '../components/MentorSelector';
 import CreditsBadge from '../components/CreditsBadge';
+import { useI18n } from '../i18n';
 
 interface HomePageProps {
   targetUrl: string;
@@ -28,6 +29,7 @@ export default function HomePage({
   onOpenEarnModal,
   creditsCost,
 }: HomePageProps) {
+  const { t, language } = useI18n();
   const sampleUrls = ['stripe.com', 'linear.app', 'resend.com', 'supabase.com'];
 
   return (
@@ -36,16 +38,27 @@ export default function HomePage({
       <div className="text-center space-y-6 max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-mono">
           <Sparkles className="h-3 w-3" />
-          <span>AI BUSINESS MENTOR BOARD FOR INDIE BUILDERS</span>
+          <span>{t.hero.badge}</span>
         </div>
         <h1 className="font-display font-black text-4xl sm:text-5xl text-white tracking-tight relative leading-none">
-          Evaluate Your Product <br />
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-500">
-            Commercial Viability Moat
-          </span>
+          {language === 'zh-CN' ? (
+            <>
+              评估你的项目 <br />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-500">
+                商业可行性与壁垒
+              </span>
+            </>
+          ) : (
+            <>
+              Evaluate Your Product <br />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-500">
+                Commercial Viability Moat
+              </span>
+            </>
+          )}
         </h1>
-        <p className="text-sm sm:text-base text-slate-350 font-sans leading-relaxed max-w-2xl mx-auto">
-          Submit your product website and discover how it can make money, who would pay for it, and which advantages to amplify under custom business mentor lenses.
+        <p className="text-sm sm:text-base text-slate-300 font-sans leading-relaxed max-w-2xl mx-auto">
+          {t.hero.subtitle}
         </p>
       </div>
 
@@ -55,7 +68,7 @@ export default function HomePage({
           
           <div className="flex items-center justify-between border-b border-slate-950 pb-4">
             <span className="text-[10px] text-slate-500 font-mono uppercase font-bold tracking-wider">
-              Verify your API credits count:
+              {t.hero.verifyCredits}
             </span>
             <CreditsBadge balance={creditsBalance} onOpenEarnModal={onOpenEarnModal} />
           </div>
@@ -65,7 +78,7 @@ export default function HomePage({
             {/* Target URL inputs */}
             <div className="space-y-2">
               <label htmlFor="url" className="text-xs font-bold font-mono text-slate-400 uppercase tracking-wider block">
-                Product Landing Page URL
+                {language === 'zh-CN' ? '项目落地页网址 (Landing Page URL)' : 'Product Landing Page URL'}
               </label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500 font-mono text-sm pointer-events-none select-none">
@@ -75,10 +88,10 @@ export default function HomePage({
                   id="url"
                   type="text"
                   required
-                  placeholder="stripe.com"
+                  placeholder={t.hero.inputPlaceholder}
                   value={targetUrl}
                   onChange={(e) => setTargetUrl(e.target.value)}
-                  className="w-full pl-[78px] pr-4 py-4 bg-slate-950 border border-slate-800 rounded-xl font-mono text-white placeholder-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition"
+                  className="w-full pl-[78px] pr-4 py-4 bg-slate-950 border border-slate-880 rounded-xl font-mono text-white placeholder-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition"
                 />
               </div>
             </div>
@@ -95,14 +108,14 @@ export default function HomePage({
               type="submit"
               className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-bold font-mono transition shadow-lg shadow-indigo-600/15 cursor-pointer uppercase tracking-wider"
             >
-              Analyze Business Value (-{creditsCost} Credits)
+              {t.hero.analyzeButton} (-{creditsCost} {language === 'zh-CN' ? '积分' : 'Credits'})
             </button>
           </form>
 
           {/* Quick links samples */}
           <div className="pt-5 border-t border-slate-850 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <span className="text-[10px] text-slate-550 font-mono uppercase font-bold tracking-wider">
-              Or inspect verified samples:
+            <span className="text-[10px] text-slate-500 font-mono uppercase font-bold tracking-wider">
+              {t.hero.sampleLinks}
             </span>
             <div className="flex flex-wrap gap-2">
               {sampleUrls.map((sample) => (

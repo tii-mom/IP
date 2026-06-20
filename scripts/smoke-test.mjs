@@ -37,27 +37,30 @@ async function runSmokeTests() {
 
   console.log('✅ Healthcheck passed:', healthData);
 
-  // Define testing matrix for the three modes
-  const testModes = [
-    {
-      mode: 'quick_scan',
-      selectedMentors: [],
-      expectedMentorsCount: 1 // Defaults to solo Naval Ravikant
-    },
-    {
-      mode: 'single_mentor',
-      selectedMentors: ['steve_jobs'],
-      expectedMentorsCount: 1 // Steve Jobs
-    },
-    {
-      mode: 'mentor_board',
-      selectedMentors: ['elon_musk', 'jeff_bezos', 'mark_zuckerberg'],
-      expectedMentorsCount: 3 // Board of 3
-    }
+  // Define testing matrix for 3 modes * 2 languages = 6 configurations
+  const testMatrix = [];
+  const modes = [
+    { mode: 'quick_scan', selectedMentors: [], expectedMentorsCount: 1 },
+    { mode: 'single_mentor', selectedMentors: ['steve_jobs'], expectedMentorsCount: 1 },
+    { mode: 'mentor_board', selectedMentors: ['elon_musk', 'jeff_bezos', 'mark_zuckerberg'], expectedMentorsCount: 3 }
   ];
+  const languages = ['en', 'zh-CN'];
 
-  for (const t of testModes) {
-    console.log(`\n🔍 Testing mode: "${t.mode}" with mentors:`, t.selectedMentors);
+  for (const m of modes) {
+    for (const lang of languages) {
+      testMatrix.push({
+        mode: m.mode,
+        selectedMentors: m.selectedMentors,
+        expectedMentorsCount: m.expectedMentorsCount,
+        language: lang
+      });
+    }
+  }
+
+  const cnRegex = /[\u4e00-\u9fff]/;
+
+  for (const t of testMatrix) {
+    console.log(`\n🔍 Testing mode: "${t.mode}" | language: "${t.language}" | mentors:`, t.selectedMentors);
 
     try {
       const analyzeResponse = await fetch('http://localhost:8787/api/analyze', {
@@ -69,7 +72,8 @@ async function runSmokeTests() {
           audience: 'indie developers',
           details: 'smoke test evaluation',
           analysisMode: t.mode,
-          selectedMentors: t.selectedMentors
+          selectedMentors: t.selectedMentors,
+          language: t.language
         })
       });
 
@@ -84,13 +88,18 @@ async function runSmokeTests() {
         'projectName', 'url', 'score', 'grade',
         'summary', 'metrics', 'moneyPaths',
         'targetBuyers', 'advantageMap', 'growthLevers',
-        'mentorReports', 'actionPlan', 'riskWarnings'
+        'mentorReports', 'actionPlan', 'riskWarnings', 'language'
       ];
 
       for (const k of keysToCheck) {
         if (!(k in report)) {
           throw new Error(`Missing expected BusinessAuditResult key: "${k}"`);
         }
+      }
+
+      // Check language matches
+      if (report.language !== t.language) {
+        throw new Error(`Expected report language "${t.language}", got "${report.language}"`);
       }
 
       // Check metrics structure
@@ -124,14 +133,39 @@ async function runSmokeTests() {
         throw new Error('Visual hotspots / LP Conversion layout metrics found in report payload!');
       }
 
-      console.log(`✅ Mode "${t.mode}" passed. Project Name: "${report.projectName}", Score: ${report.score}, Mentors count: ${report.mentorReports.length}`);
+      // If language is zh-CN, verify multiple fields contain Chinese characters
+      if (t.language === 'zh-CN') {
+        const cnFieldsToVerify = [
+          { name: 'summary.oneSentenceDiagnosis', value: report.summary?.oneSentenceDiagnosis },
+          { name: 'summary.biggestOpportunity', value: report.summary?.biggestOpportunity },
+          { name: 'moneyPaths[0].whyItFits', value: report.moneyPaths?.[0]?.whyItFits },
+          { name: 'targetBuyers[0].whyTheyBuy', value: report.targetBuyers?.[0]?.whyTheyBuy },
+          { name: 'mentorReports[0].verdict', value: report.mentorReports?.[0]?.verdict },
+          { name: 'actionPlan.next24Hours[0]', value: report.actionPlan?.next24Hours?.[0] },
+          { name: 'riskWarnings[0].fix', value: report.riskWarnings?.[0]?.fix }
+        ];
+
+        for (const item of cnFieldsToVerify) {
+          if (!item.value || !cnRegex.test(item.value)) {
+            throw new Error(`Field "${item.name}" ("${item.value}") was expected to contain Chinese characters, but none were found.`);
+          }
+        }
+        console.log(`🇨🇳 Checked Chinese characters verified successfully in multiple fields.`);
+      } else {
+        // Verify English response does not contain Chinese characters in diagnosis
+        if (cnRegex.test(report.summary.oneSentenceDiagnosis)) {
+          throw new Error(`English report summary contains Chinese characters: "${report.summary.oneSentenceDiagnosis}"`);
+        }
+      }
+
+      console.log(`✅ Mode "${t.mode}" [${t.language}] passed. Project Name: "${report.projectName}", Score: ${report.score}, Mentors count: ${report.mentorReports.length}`);
     } catch (err) {
-      console.error(`❌ Test failed for mode "${t.mode}":`, err.message);
+      console.error(`❌ Test failed for mode "${t.mode}" [${t.language}]:`, err.message);
       process.exit(1);
     }
   }
 
-  console.log('\n🎉 All 3 Modes Smoke Tests completed successfully!');
+  console.log('\n🎉 All 6 Configurations Smoke Tests completed successfully!');
   process.exit(0);
 }
 

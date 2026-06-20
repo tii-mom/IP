@@ -13,7 +13,8 @@ export async function analyzeWebsite(params: AnalyzeRequest): Promise<BusinessAu
       details: params.details,
       analysisMode: params.analysisMode,
       selectedMentors: params.selectedMentors,
-      turnstileToken: params.turnstileToken || '1x00000000000000000000AA' // test key fallback
+      turnstileToken: params.turnstileToken || '1x00000000000000000000AA', // test key fallback
+      language: params.language
     }),
   });
 

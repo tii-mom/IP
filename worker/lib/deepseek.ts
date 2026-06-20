@@ -19,9 +19,10 @@ export function normalizeBusinessAuditResult(
   url: string,
   projectName: string,
   analysisMode?: 'quick_scan' | 'single_mentor' | 'mentor_board',
-  selectedMentors?: string[]
+  selectedMentors?: string[],
+  language: 'en' | 'zh-CN' = 'en'
 ): BusinessAuditResult {
-  const fallback = generateFallbackReport(url, projectName, analysisMode, selectedMentors);
+  const fallback = generateFallbackReport(url, projectName, analysisMode, selectedMentors, language);
 
   const safe = (val: any, def: any) => (val !== undefined && val !== null ? val : def);
 
@@ -109,6 +110,7 @@ export function normalizeBusinessAuditResult(
     url: url,
     score: typeof raw?.score === 'number' ? raw.score : fallback.score,
     grade: safe(raw?.grade, fallback.grade) as 'S' | 'A' | 'B' | 'C' | 'D',
+    language: language,
     summary: normalizedSummary,
     metrics: normalizedMetrics,
     moneyPaths: normalizedMoneyPaths,
@@ -129,7 +131,8 @@ export async function generateIPValueReport(
   details: string,
   analysisMode: 'quick_scan' | 'single_mentor' | 'mentor_board',
   selectedMentors: string[],
-  env: Env
+  env: Env,
+  language: 'en' | 'zh-CN' = 'en'
 ): Promise<BusinessAuditResult> {
   const model = env.DEEPSEEK_MODEL || 'deepseek-v4-flash';
   const baseUrl = env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com';
@@ -137,7 +140,7 @@ export async function generateIPValueReport(
 
   if (!apiKey) {
     console.warn('DEEPSEEK_API_KEY is not defined. Falling back to local heuristics generator.');
-    return generateFallbackReport(url, projectName, analysisMode, selectedMentors);
+    return generateFallbackReport(url, projectName, analysisMode, selectedMentors, language);
   }
 
   // Define mentor profile mapping
@@ -263,7 +266,18 @@ Return a JSON object conforming exactly to this structure:
       "fix": "Actionable way to fix or mitigate this risk"
     }
   ]
-}`;
+}
+
+Output Language Rule:
+- If the language requested is "zh-CN", all human-readable string values in the JSON must be written in Simplified Chinese.
+- If the language requested is "en", all human-readable string values in the JSON must be written in English.
+- JSON keys must always remain in English.
+- Do not translate enum values such as subscription, one_time, agency, api, marketplace, enterprise, ads, affiliate, data, community.
+- Do not translate mentorId.
+- Do not force-translate projectName, URLs, product names, brand names, or technical names.
+- Mentor names may remain in English, but explanations, verdicts, advice, risks, summaries, money paths, target buyer descriptions, action plans, and warnings must follow the selected language.
+
+Requested Output Language: ${language}`;
 
   try {
     const response = await fetch(`${baseUrl}/chat/completions`, {
@@ -286,7 +300,7 @@ Return a JSON object conforming exactly to this structure:
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`DeepSeek API returned error status ${response.status}: ${errorText}`);
-      return generateFallbackReport(url, projectName);
+      return generateFallbackReport(url, projectName, analysisMode, selectedMentors, language);
     }
 
     const responseData: any = await response.json();
@@ -294,15 +308,15 @@ Return a JSON object conforming exactly to this structure:
 
     if (!content) {
       console.error('DeepSeek returned empty content.');
-      return generateFallbackReport(url, projectName, analysisMode, selectedMentors);
+      return generateFallbackReport(url, projectName, analysisMode, selectedMentors, language);
     }
 
     const parsed = JSON.parse(content.trim());
     
     // Normalize and validate response data
-    return normalizeBusinessAuditResult(parsed, url, projectName, analysisMode, selectedMentors);
+    return normalizeBusinessAuditResult(parsed, url, projectName, analysisMode, selectedMentors, language);
   } catch (err: any) {
     console.error('Failed to generate business audit report from DeepSeek:', err);
-    return generateFallbackReport(url, projectName, analysisMode, selectedMentors);
+    return generateFallbackReport(url, projectName, analysisMode, selectedMentors, language);
   }
 }

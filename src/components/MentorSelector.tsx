@@ -1,19 +1,17 @@
 import { Zap, BookOpen, Users } from 'lucide-react';
+import { useI18n } from '../i18n';
 
 export interface Mentor {
   id: string;
-  name: string;
-  lens: string;
-  focus: string;
 }
 
-export const MENTORS: Mentor[] = [
-  { id: 'elon_musk', name: 'Elon Musk', lens: 'Musk-style Scale Lens', focus: '10x scaling, automation leverage, mission depth' },
-  { id: 'steve_jobs', name: 'Steve Jobs', lens: 'Jobs-style Positioning Lens', focus: 'Clarity, product soul, category sharpness' },
-  { id: 'naval_ravikant', name: 'Naval Ravikant', lens: 'Naval-style Solo Leverage Lens', focus: 'Solo founder fit, code & content leverage moats' },
-  { id: 'mark_zuckerberg', name: 'Mark Zuckerberg', lens: 'Zuckerberg-style Growth Lens', focus: 'Viral loops, retention hook, network effects' },
-  { id: 'jeff_bezos', name: 'Jeff Bezos', lens: 'Bezos-style Flywheel Lens', focus: 'Customer obsession, data moats, scale flywheels' },
-  { id: 'larry_ellison', name: 'Larry Ellison', lens: 'Ellison-style Enterprise Lens', focus: 'Enterprise readiness, raw corporate pricing power' }
+export const MENTOR_IDS = [
+  'elon_musk',
+  'steve_jobs',
+  'naval_ravikant',
+  'mark_zuckerberg',
+  'jeff_bezos',
+  'larry_ellison'
 ];
 
 interface MentorSelectorProps {
@@ -29,6 +27,7 @@ export default function MentorSelector({
   selectedMentors,
   setSelectedMentors,
 }: MentorSelectorProps) {
+  const { t, language } = useI18n();
 
   const toggleMentor = (id: string) => {
     if (analysisMode === 'single_mentor') {
@@ -60,10 +59,10 @@ export default function MentorSelector({
     <div className="space-y-6 bg-slate-900/60 border border-slate-800 p-5 sm:p-6 rounded-2xl">
       <div className="space-y-1">
         <h3 className="text-xs font-bold font-mono text-slate-400 uppercase tracking-wider">
-          1. Select Assessment Mode
+          {t.mentorSelector.title}
         </h3>
         <p className="text-[10px] text-slate-500">
-          Costs vary depending on depth of analysis and mentor count.
+          {t.mentorSelector.subtitle}
         </p>
       </div>
 
@@ -79,8 +78,8 @@ export default function MentorSelector({
           }`}
         >
           <Zap className="h-5 w-5 mb-2 text-indigo-400" />
-          <span className="text-xs font-bold font-mono uppercase block">Quick Scan</span>
-          <span className="text-[9px] font-mono text-indigo-300 mt-1 block">3 Credits</span>
+          <span className="text-xs font-bold font-mono uppercase block">{t.mentorSelector.quickScan}</span>
+          <span className="text-[9px] font-mono text-indigo-300 mt-1 block">3 {language === 'zh-CN' ? '积分' : 'Credits'}</span>
         </button>
 
         <button
@@ -93,8 +92,8 @@ export default function MentorSelector({
           }`}
         >
           <BookOpen className="h-5 w-5 mb-2 text-cyan-400" />
-          <span className="text-xs font-bold font-mono uppercase block">Single Mentor</span>
-          <span className="text-[9px] font-mono text-cyan-300 mt-1 block">5 Credits</span>
+          <span className="text-xs font-bold font-mono uppercase block">{t.mentorSelector.singleMentor}</span>
+          <span className="text-[9px] font-mono text-cyan-300 mt-1 block">5 {language === 'zh-CN' ? '积分' : 'Credits'}</span>
         </button>
 
         <button
@@ -107,8 +106,8 @@ export default function MentorSelector({
           }`}
         >
           <Users className="h-5 w-5 mb-2 text-emerald-400" />
-          <span className="text-xs font-bold font-mono uppercase block">Mentor Board</span>
-          <span className="text-[9px] font-mono text-emerald-300 mt-1 block">12 Credits</span>
+          <span className="text-xs font-bold font-mono uppercase block">{t.mentorSelector.mentorBoard}</span>
+          <span className="text-[9px] font-mono text-emerald-300 mt-1 block">12 {language === 'zh-CN' ? '积分' : 'Credits'}</span>
         </button>
       </div>
 
@@ -117,21 +116,22 @@ export default function MentorSelector({
         <div className="space-y-4 pt-4 border-t border-slate-950">
           <div className="flex items-center justify-between">
             <span className="text-[10px] text-slate-400 font-mono uppercase font-bold tracking-wider">
-              {analysisMode === 'single_mentor' ? 'Choose 1 Business Mentor Lens:' : 'Select up to 3 Board Mentors Lenses:'}
+              {analysisMode === 'single_mentor' ? t.mentorSelector.chooseOne : t.mentorSelector.chooseUpToThree}
             </span>
             <span className="text-[9px] text-slate-500 font-mono">
-              Selected: {selectedMentors.length}
+              {language === 'zh-CN' ? '已选择' : 'Selected'}: {selectedMentors.length}
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            {MENTORS.map((m) => {
-              const active = selectedMentors.includes(m.id);
+            {MENTOR_IDS.map((mentorId) => {
+              const active = selectedMentors.includes(mentorId);
+              const mInfo = t.mentorSelector.mentors[mentorId] || { name: mentorId, lens: mentorId, focus: '' };
               return (
                 <button
-                  key={m.id}
+                  key={mentorId}
                   type="button"
-                  onClick={() => toggleMentor(m.id)}
+                  onClick={() => toggleMentor(mentorId)}
                   className={`p-3.5 rounded-xl border text-left transition flex flex-col justify-between h-24 cursor-pointer ${
                     active
                       ? 'bg-indigo-600/10 border-indigo-500 text-white'
@@ -139,11 +139,11 @@ export default function MentorSelector({
                   }`}
                 >
                   <div>
-                    <span className="text-xs font-bold font-mono block">{m.name}</span>
-                    <span className="text-[9px] text-slate-500 font-mono block leading-none mt-1">{m.lens}</span>
+                    <span className="text-xs font-bold font-mono block">{mInfo.name}</span>
+                    <span className="text-[9px] text-slate-500 font-mono block leading-none mt-1">{mInfo.lens}</span>
                   </div>
                   <span className="text-[9px] text-slate-400 font-sans leading-tight mt-2 block truncate w-full">
-                    {m.focus}
+                    {mInfo.focus}
                   </span>
                 </button>
               );

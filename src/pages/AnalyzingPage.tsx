@@ -1,4 +1,5 @@
 import { Terminal } from 'lucide-react';
+import { useI18n } from '../i18n';
 
 interface AnalyzingPageProps {
   logProgress: number;
@@ -9,6 +10,8 @@ export default function AnalyzingPage({
   logProgress,
   terminalLogs,
 }: AnalyzingPageProps) {
+  const { t, language } = useI18n();
+
   return (
     <div className="flex-1 bg-slate-950 flex flex-col items-center justify-center p-6 select-none relative overflow-hidden">
       {/* Ambient glowing circles */}
@@ -45,7 +48,7 @@ export default function AnalyzingPage({
           {logProgress < 100 && (
             <div className="flex items-center gap-2 text-indigo-400 mt-4 animate-pulse">
               <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-ping" />
-              <span className="text-[11px] font-semibold">Running multi-factor analysis...</span>
+              <span className="text-[11px] font-semibold">{t.loadingLogs.multiFactor}</span>
             </div>
           )}
         </div>
@@ -53,7 +56,7 @@ export default function AnalyzingPage({
         {/* Console info section */}
         <div className="bg-slate-950 border-t border-slate-900 p-4 text-[10px] text-slate-500 font-mono flex items-center justify-between">
           <span>IDEAPILOT ENGINE v1.83</span>
-          <span>SECURE PARSING BLOCK</span>
+          <span>{language === 'zh-CN' ? '安全解析安全模块' : 'SECURE PARSING BLOCK'}</span>
         </div>
       </div>
     </div>
