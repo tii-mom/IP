@@ -1,20 +1,49 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# IdeaPilot
 
-# Run and deploy your AI Studio app
+An AI-powered startup and landing page commercialization diagnostic platform. Decoupled and fully deployed on Cloudflare Pages (Frontend SPA) and Cloudflare Worker API (Backend) utilizing the DeepSeek V4 Flash engine.
 
-This contains everything you need to run your app locally.
+## Development and Deployment Setup
 
-View your app in AI Studio: https://ai.studio/apps/187d5b15-5623-4905-ae5c-8eb33d6d7eb6
+### Environment Variables
 
-## Run Locally
+Create `.dev.vars` in the project root for local Worker API development:
+```env
+DEEPSEEK_API_KEY=your-deepseek-api-key
+DEEPSEEK_BASE_URL=https://api.deepseek.com
+DEEPSEEK_MODEL=deepseek-v4-flash
+TURNSTILE_SECRET_KEY=your-cloudflare-turnstile-secret
+ALLOWED_ORIGINS=http://localhost:5173
+APP_ENV=development
+SITE_URL=http://localhost:5173
+API_BASE_URL=http://localhost:8787
+```
 
-**Prerequisites:**  Node.js
-
+### Dev Execution
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+   ```bash
+   npm install
+   ```
+
+2. Run the frontend Vite server:
+   ```bash
+   npm run dev
+   ```
+
+3. Run the Worker API emulator:
+   ```bash
+   npm run dev:api
+   ```
+
+### Deploying to Cloudflare
+
+- **Deploy Backend API**:
+  ```bash
+  npm run deploy:api
+  ```
+
+- **Deploy Frontend Web**:
+  ```bash
+  npm run build
+  npm run deploy:web
+  ```

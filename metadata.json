@@ -3,6 +3,7 @@
   "description": "An AI-powered commercial value analysis platform for independent developers to audit, score, and optimize landing page conversions, pricing strategies, and monetization paths.",
   "requestFramePermissions": [],
   "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+    "MAJOR_CAPABILITY_CLOUDFLARE_WORKER",
+    "MAJOR_CAPABILITY_DEEPSEEK_API"
   ]
 }
