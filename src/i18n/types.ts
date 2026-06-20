@@ -53,17 +53,23 @@ export interface TranslationDictionary {
   credits: {
     balance: string;
     earnCredits: string;
+    earnCreditsDesc: string;
     insufficientTitle: string;
     insufficientDesc: string;
     dailyCheckin: string;
+    dailyCheckinTitle: string;
     dailyCheckinDesc: string;
     shareOnX: string;
+    shareOnXTitle: string;
     shareOnXDesc: string;
     inviteBuilder: string;
     inviteBuilderDesc: string;
+    copyInviteLink: string;
     submitFeedback: string;
+    feedbackTitle: string;
     submitFeedbackDesc: string;
     feedbackPlaceholder: string;
+    feedbackSubmitted: string;
     referralTitle: string;
     referralDesc: string;
   };

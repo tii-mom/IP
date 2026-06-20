@@ -17,7 +17,7 @@ export default function EarnCreditsModal({
   creditState,
   setCreditState,
 }: EarnCreditsModalProps) {
-  const { t, language } = useI18n();
+  const { t } = useI18n();
   const [feedback, setFeedback] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -94,9 +94,7 @@ export default function EarnCreditsModal({
             </h3>
           </div>
           <p className="text-xs text-slate-400">
-            {language === 'zh-CN'
-              ? '完成快速每日与增长任务，即可解锁更高级的项目商业评估服务。'
-              : 'Complete quick daily and growth tasks to unlock advanced startup business reviews.'}
+            {t.credits.earnCreditsDesc}
           </p>
         </div>
 
@@ -115,7 +113,7 @@ export default function EarnCreditsModal({
             <div>
               <span className="text-[10px] text-indigo-400 font-mono uppercase font-bold">{t.credits.dailyCheckin}</span>
               <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">
-                {language === 'zh-CN' ? '领取每日签到奖励' : 'Claim Daily Check-in Credits'}
+                {t.credits.dailyCheckinTitle}
               </h4>
               <p className="text-[11px] text-slate-400 font-sans mt-0.5">{t.credits.dailyCheckinDesc}</p>
             </div>
@@ -128,7 +126,7 @@ export default function EarnCreditsModal({
                   : 'bg-indigo-600 hover:bg-indigo-500 text-white'
               }`}
             >
-              {isCheckedInToday ? t.common.claimed : `+5 ${language === 'zh-CN' ? '积分' : 'Credits'}`}
+              {isCheckedInToday ? t.common.claimed : `+5 ${t.common.credits}`}
             </button>
           </div>
 
@@ -137,7 +135,7 @@ export default function EarnCreditsModal({
             <div>
               <span className="text-[10px] text-indigo-400 font-mono uppercase font-bold">{t.credits.shareOnX}</span>
               <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">
-                {language === 'zh-CN' ? '在 X / Twitter 上分享 IdeaPilot' : 'Share IdeaPilot on X / Twitter'}
+                {t.credits.shareOnXTitle}
               </h4>
               <p className="text-[11px] text-slate-400 font-sans mt-0.5">{t.credits.shareOnXDesc}</p>
             </div>
@@ -150,7 +148,7 @@ export default function EarnCreditsModal({
                   : 'bg-indigo-600 hover:bg-indigo-500 text-white'
               }`}
             >
-              {isSharedToday ? t.common.claimed : `+10 ${language === 'zh-CN' ? '积分' : 'Credits'}`}
+              {isSharedToday ? t.common.claimed : `+10 ${t.common.credits}`}
             </button>
           </div>
 
@@ -181,7 +179,7 @@ export default function EarnCreditsModal({
                 ) : (
                   <>
                     <Copy className="h-3 w-3" />
-                    <span>{isInvitedClaimed ? (language === 'zh-CN' ? '复制邀请链接' : 'Copy Invite Link') : `+20 ${language === 'zh-CN' ? '积分' : 'Credits'}`}</span>
+                    <span>{isInvitedClaimed ? t.credits.copyInviteLink : `+20 ${t.common.credits}`}</span>
                   </>
                 )}
               </button>
@@ -195,7 +193,7 @@ export default function EarnCreditsModal({
           <div className="p-4 bg-slate-950 border border-slate-850 rounded-2xl space-y-3">
             <div>
               <span className="text-[10px] text-indigo-400 font-mono uppercase font-bold">{t.credits.submitFeedback}</span>
-              <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">{language === 'zh-CN' ? '提交反馈建议' : 'Submit Feedback'}</h4>
+              <h4 className="text-xs font-bold text-white uppercase font-mono mt-0.5">{t.credits.feedbackTitle}</h4>
               <p className="text-[11px] text-slate-400 font-sans mt-0.5">{t.credits.submitFeedbackDesc}</p>
             </div>
             
@@ -204,9 +202,9 @@ export default function EarnCreditsModal({
                 type="text"
                 value={feedback}
                 disabled={isFeedbackSubmitted}
-                placeholder={isFeedbackSubmitted ? (language === 'zh-CN' ? '反馈已成功提交，非常感谢！' : 'Feedback submitted. Thank you!') : t.credits.feedbackPlaceholder}
+                placeholder={isFeedbackSubmitted ? t.credits.feedbackSubmitted : t.credits.feedbackPlaceholder}
                 onChange={(e) => setFeedback(e.target.value)}
-                className="flex-grow p-2.5 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 placeholder-slate-600 focus:outline-none transition disabled:opacity-50"
+                className="flex-grow p-2.5 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 placeholder-slate-650 focus:outline-none transition disabled:opacity-50"
               />
               <button
                 type="submit"
@@ -217,7 +215,7 @@ export default function EarnCreditsModal({
                     : 'bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer'
                 }`}
               >
-                {isFeedbackSubmitted ? t.common.submitted : `+8 ${language === 'zh-CN' ? '积分' : 'Credits'}`}
+                {isFeedbackSubmitted ? t.common.submitted : `+8 ${t.common.credits}`}
               </button>
             </form>
           </div>

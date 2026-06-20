@@ -43,22 +43,46 @@ export function normalizeBusinessAuditResult(
     executionFeasibility: typeof raw?.metrics?.executionFeasibility === 'number' ? raw.metrics.executionFeasibility : fallback.metrics.executionFeasibility
   };
 
+  const isZh = language === 'zh-CN';
+  const defaultMoneyName = isZh ? '变现方案' : 'Monetization Route';
+  const defaultMoneyWhy = isZh ? '匹配标准项目变现画像。' : 'Matches standard project monetization profiles.';
+  const defaultMoneyPrice = isZh ? '自定义价值交换定价' : 'Custom value-exchange pricing';
+  const defaultMoneyExp = isZh ? '设计目标落地页的转化触发器。' : 'Define a target landing page callout trigger.';
+
+  const defaultBuyerSegment = isZh ? '大众用户' : 'General Users';
+  const defaultBuyerWhy = isZh ? '他们需要效率解决方案。' : 'They require efficiency solutions.';
+  const defaultBuyerOffer = isZh ? '基础档位定价。' : 'Basic tier pricing.';
+
+  const defaultLeverName = isZh ? '病毒式传播钩子' : 'Viral Hook';
+  const defaultLeverChannel = isZh ? '社交媒体渠道' : 'Social media channels';
+  const defaultLeverWhy = isZh ? '分享门槛低。' : 'Low barrier to sharing.';
+  const defaultLeverAction = isZh ? '添加视觉分享组件。' : 'Add visual sharing widgets.';
+
+  const defaultMentorName = isZh ? '商业导师' : 'Business Mentor';
+  const defaultMentorLens = isZh ? '通用商业评估视角' : 'General business evaluation lens';
+  const defaultMentorVerdict = isZh ? '项目设计令人满意，但仍有成长空间。' : 'Satisfactory product design with room for growth.';
+  const defaultMentorAdvice = isZh ? '尽早验证用户参与度指标。' : 'Validate user engagement metrics early.';
+  const defaultMentorBlindSpot = isZh ? '容易受到局部市场饱和的影响。' : 'Vulnerable to localized market saturation.';
+
+  const defaultRiskName = isZh ? '无法预见的工程开发开销。' : 'Unforeseen engineering overheads.';
+  const defaultRiskFix = isZh ? '尽早引入解耦测试管道。' : 'Introduce decoupled testing pipelines early.';
+
   const normalizedMoneyPaths = Array.isArray(raw?.moneyPaths) 
     ? raw.moneyPaths.map((item: any) => ({
-        name: safe(item?.name, 'Monetization Route'),
+        name: safe(item?.name, defaultMoneyName),
         model: safe(item?.model, 'subscription'),
-        whyItFits: safe(item?.whyItFits, 'Matches standard project monetization profiles.'),
-        suggestedPriceOrValueExchange: safe(item?.suggestedPriceOrValueExchange, 'Custom value-exchange pricing'),
-        firstExperiment: safe(item?.firstExperiment, 'Define a target landing page callout trigger.')
+        whyItFits: safe(item?.whyItFits, defaultMoneyWhy),
+        suggestedPriceOrValueExchange: safe(item?.suggestedPriceOrValueExchange, defaultMoneyPrice),
+        firstExperiment: safe(item?.firstExperiment, defaultMoneyExp)
       }))
     : fallback.moneyPaths;
 
   const normalizedTargetBuyers = Array.isArray(raw?.targetBuyers)
     ? raw.targetBuyers.map((item: any) => ({
-        segment: safe(item?.segment, 'General Users'),
+        segment: safe(item?.segment, defaultBuyerSegment),
         willingnessToPay: typeof item?.willingnessToPay === 'number' ? item.willingnessToPay : 70,
-        whyTheyBuy: safe(item?.whyTheyBuy, 'They require efficiency solutions.'),
-        bestOffer: safe(item?.bestOffer, 'Basic tier pricing.')
+        whyTheyBuy: safe(item?.whyTheyBuy, defaultBuyerWhy),
+        bestOffer: safe(item?.bestOffer, defaultBuyerOffer)
       }))
     : fallback.targetBuyers;
 
@@ -71,22 +95,22 @@ export function normalizeBusinessAuditResult(
 
   const normalizedGrowthLevers = Array.isArray(raw?.growthLevers)
     ? raw.growthLevers.map((item: any) => ({
-        lever: safe(item?.lever, 'Viral Hook'),
-        channel: safe(item?.channel, 'Social media channels'),
-        whyItWorks: safe(item?.whyItWorks, 'Low barrier to sharing.'),
-        firstAction: safe(item?.firstAction, 'Add visual sharing widgets.')
+        lever: safe(item?.lever, defaultLeverName),
+        channel: safe(item?.channel, defaultLeverChannel),
+        whyItWorks: safe(item?.whyItWorks, defaultLeverWhy),
+        firstAction: safe(item?.firstAction, defaultLeverAction)
       }))
     : fallback.growthLevers;
 
   const normalizedMentorReports = Array.isArray(raw?.mentorReports)
     ? raw.mentorReports.map((item: any) => ({
         mentorId: safe(item?.mentorId, 'general_mentor'),
-        mentorName: safe(item?.mentorName, 'Business Mentor'),
-        lens: safe(item?.lens, 'General business evaluation lens'),
+        mentorName: safe(item?.mentorName, defaultMentorName),
+        lens: safe(item?.lens, defaultMentorLens),
         score: typeof item?.score === 'number' ? item.score : 80,
-        verdict: safe(item?.verdict, 'Satisfactory product design with room for growth.'),
-        keyAdvice: Array.isArray(item?.keyAdvice) ? item.keyAdvice : ['Validate user engagement metrics early.'],
-        blindSpot: safe(item?.blindSpot, 'Vulnerable to localized market saturation.')
+        verdict: safe(item?.verdict, defaultMentorVerdict),
+        keyAdvice: Array.isArray(item?.keyAdvice) ? item.keyAdvice : [defaultMentorAdvice],
+        blindSpot: safe(item?.blindSpot, defaultMentorBlindSpot)
       }))
     : fallback.mentorReports;
 
@@ -99,9 +123,9 @@ export function normalizeBusinessAuditResult(
 
   const normalizedRiskWarnings = Array.isArray(raw?.riskWarnings)
     ? raw.riskWarnings.map((item: any) => ({
-        risk: safe(item?.risk, 'Unforeseen engineering overheads.'),
+        risk: safe(item?.risk, defaultRiskName),
         severity: safe(item?.severity, 'medium'),
-        fix: safe(item?.fix, 'Introduce decoupled testing pipelines early.')
+        fix: safe(item?.fix, defaultRiskFix)
       }))
     : fallback.riskWarnings;
 

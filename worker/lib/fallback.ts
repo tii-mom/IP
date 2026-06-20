@@ -212,7 +212,7 @@ export function generateFallbackReport(
           model: 'subscription',
           whyItFits: '开发者愿意为节省时间和提高生产力限制而付费。',
           suggestedPriceOrValueExchange: '每月固定 29 美元',
-          firstExperiment: '锁定自定义域名集成 and 高级 API 访问日志。'
+          firstExperiment: '锁定自定义域名集成和高级 API 访问日志。'
         },
         {
           name: '自定义团队方案',
