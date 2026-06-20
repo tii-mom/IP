@@ -1,111 +1,212 @@
-import { AuditResult } from '../types';
+import { BusinessAuditResult } from '../types';
 
-export function generateFallbackReport(_url: string, projectName: string): AuditResult {
-  const finalScore = Math.floor(Math.random() * 15) + 75; // 75 to 89
-  const grade = finalScore >= 85 ? 'A' : finalScore >= 80 ? 'B' : 'C';
+export function generateFallbackReport(
+  url: string,
+  projectName: string,
+  analysisMode?: 'quick_scan' | 'single_mentor' | 'mentor_board',
+  selectedMentors?: string[]
+): BusinessAuditResult {
+  const finalScore = 78;
+
+  const mentorGlossary: Record<string, { mentorName: string; lens: string; score: number; verdict: string; keyAdvice: string[]; blindSpot: string }> = {
+    elon_musk: {
+      mentorName: 'Elon Musk',
+      lens: 'Musk-style Scale Lens',
+      score: 75,
+      verdict: 'Good utility, but lacks massive system leverage to command broad market share.',
+      keyAdvice: [
+        'Automate the HTML extraction scraper to crawl thousands of sites concurrently.',
+        'Open API hooks to build an ecosystem rather than a standalone dashboard.'
+      ],
+      blindSpot: 'Requires heavy upfront cloud infrastructure configuration.'
+    },
+    steve_jobs: {
+      mentorName: 'Steve Jobs',
+      lens: 'Jobs-style Positioning Lens',
+      score: 82,
+      verdict: 'Clear layout value, but value proposition copy could be vastly simplified.',
+      keyAdvice: [
+        'Strip non-essential details from the dashboard to elevate focus on the score.',
+        'Position the seal certificate as an emotional badge of honor.'
+      ],
+      blindSpot: 'Tends to overlook the raw engineering workflow requirements of developers.'
+    },
+    naval_ravikant: {
+      mentorName: 'Naval Ravikant',
+      lens: 'Naval-style Solo Leverage Lens',
+      score: 90,
+      verdict: 'Excellent product for a solo developer utilizing code and content leverage.',
+      keyAdvice: [
+        'Keep running costs minimal by hosting backend functions exclusively on Cloudflare Workers.',
+        'Let product quality drive word-of-mouth adoption without paid sales staff.'
+      ],
+      blindSpot: 'Vulnerable to sudden changes in upstream LLM api billing models.'
+    },
+    larry_ellison: {
+      mentorName: 'Larry Ellison',
+      lens: 'Ellison-style Enterprise Lens',
+      score: 76,
+      verdict: 'Good utility, but needs direct B2B corporate sales locking mechanisms.',
+      keyAdvice: [
+        'Create enterprise seats controls and target design agencies.',
+        'Bundle active audits into a client reporting white-label PDF.'
+      ],
+      blindSpot: 'High touch sales cycle takes away velocity.'
+    },
+    mark_zuckerberg: {
+      mentorName: 'Mark Zuckerberg',
+      lens: 'Zuckerberg-style Growth Lens',
+      score: 80,
+      verdict: 'Lacks built-in viral distribution features to capture high growth speeds.',
+      keyAdvice: [
+        'Establish direct invite credits bonuses to turn users into promoters.',
+        'Inject watermark seal badges onto all generated public dashboards.'
+      ],
+      blindSpot: 'Growth loops may dilute the professional brand of validation seals.'
+    },
+    jeff_bezos: {
+      mentorName: 'Jeff Bezos',
+      lens: 'Bezos-style Flywheel Lens',
+      score: 84,
+      verdict: 'Needs to reinvest data margins to create a structural operations moat.',
+      keyAdvice: [
+        'Collect anonymized project metadata to construct market readiness reports.',
+        'Continuously lower query latency and costs to build operational leverage.'
+      ],
+      blindSpot: 'Requires significant upfront volume to initiate the data flywheel.'
+    }
+  };
+
+  let mentorsToScan = selectedMentors && selectedMentors.length > 0 ? selectedMentors : ['elon_musk', 'steve_jobs', 'naval_ravikant'];
+  if (analysisMode === 'quick_scan') {
+    mentorsToScan = ['naval_ravikant'];
+  } else if (analysisMode === 'single_mentor') {
+    mentorsToScan = selectedMentors && selectedMentors.length > 0 ? [selectedMentors[0]] : ['steve_jobs'];
+  }
+
+  const normalizedMentorReports = mentorsToScan.map(m => {
+    const defaultData = {
+      mentorName: m.charAt(0).toUpperCase() + m.slice(1).replace('_', ' '),
+      lens: `${m}-style Lens`,
+      score: 80,
+      verdict: 'Satisfactory product design with room for growth.',
+      keyAdvice: ['Validate user engagement metrics early.'],
+      blindSpot: 'Vulnerable to localized market saturation.'
+    };
+    const prof = mentorGlossary[m] || defaultData;
+    return {
+      mentorId: m,
+      mentorName: prof.mentorName,
+      lens: prof.lens,
+      score: prof.score,
+      verdict: prof.verdict,
+      keyAdvice: prof.keyAdvice,
+      blindSpot: prof.blindSpot
+    };
+  });
 
   return {
     projectName: projectName,
+    url: url,
     score: finalScore,
-    grade: grade,
-    metrics: {
-      willingnessToPay: Math.floor(Math.random() * 20) + 70,
-      pricingStructure: Math.floor(Math.random() * 20) + 65,
-      landingPageConversion: Math.floor(Math.random() * 20) + 70,
-      growthLoops: Math.floor(Math.random() * 25) + 60
+    grade: 'B',
+    summary: {
+      oneSentenceDiagnosis: `A utility-first builder tool for ${projectName} with strong technical leverage but missing enterprise sales positioning.`,
+      biggestOpportunity: 'Package raw APIs into a B2B enterprise plan targeting developer studios.',
+      biggestWeakness: 'High dependency on single developer resources and lack of organic virality loops.',
+      recommendedPositioning: 'The zero-config deployment accelerator for high-velocity teams.'
     },
-    hotspots: [
+    metrics: {
+      commercialValue: 80,
+      painkillerIndex: 75,
+      monetizationClarity: 70,
+      targetBuyerFit: 85,
+      advantageAmplification: 65,
+      growthLeverage: 60,
+      executionFeasibility: 90
+    },
+    moneyPaths: [
       {
-        id: 1,
-        category: 'copywriting',
-        elementName: 'Headline Value Proposition',
-        currentText: `"${projectName}: Simplified tools for modern creators."`,
-        aiPrescription: 'Change to: "Optimize the Monetization of Your Project in 10 Seconds." Better hooks immediate interest by focusing on direct utility rather than description.',
-        severity: 'critical',
-        x: 50,
-        y: 22
+        name: 'Developer Pro Tier',
+        model: 'subscription',
+        whyItFits: 'Developers are willing to pay for time saved and increased productivity limits.',
+        suggestedPriceOrValueExchange: '$29/month flat',
+        firstExperiment: 'Lock custom domain integration and premium API access logs.'
       },
       {
-        id: 2,
-        category: 'pricing',
-        elementName: 'Pricing Structure Decoy',
-        currentText: 'Flat pricing with no clear pricing options or low-commitment entry point.',
-        aiPrescription: 'Introduce a $19 Starter plan to act as a decoy/entry point and anchor your primary $49/mo team value plan.',
-        severity: 'warning',
-        x: 50,
-        y: 78
-      },
-      {
-        id: 3,
-        category: 'trust',
-        elementName: 'Social Proof Visibility',
-        currentText: 'Quotes without real links or social profiles.',
-        aiPrescription: 'Embed real-time verification indicators, verified X/Twitter cards, or developer stats cards. Improves trust metrics by up to 45%.',
-        severity: 'optimization',
-        x: 25,
-        y: 45
-      },
-      {
-        id: 4,
-        category: 'conversion',
-        elementName: 'CTA Path Friction',
-        currentText: 'Immediate registration wall without demo/preview mode.',
-        aiPrescription: 'Enable a risk-free interactive sandbox preview to let builders test value prior to mandatory signup flows.',
-        severity: 'critical',
-        x: 50,
-        y: 35
+        name: 'Custom Team Setup',
+        model: 'enterprise',
+        whyItFits: 'Allows dev teams to integrate private servers with custom security controls.',
+        suggestedPriceOrValueExchange: 'From $149/month',
+        firstExperiment: 'Add a "Contact Sales" callout trigger card in the pricing panel.'
       }
     ],
-    monetizationTiers: [
+    targetBuyers: [
       {
-        tierName: 'Starter Pilot',
-        price: '$19/mo',
-        willingnessFeedback: 'Affordable tier for freelancers testing initial validation pathways.',
-        features: [
-          '1 URL audit scan per month',
-          'Full visual Hotspot diagnostic mapping',
-          'Export reports to CSV'
-        ],
-        psychologyMetric: 'Low-friction entry pricing'
+        segment: 'Solo Indie Hackers',
+        willingnessToPay: 65,
+        whyTheyBuy: 'Need quick validation metrics and instant PDF reports for social sharing.',
+        bestOffer: 'Starter Tier ($19/mo) with standard access permissions.'
       },
       {
-        tierName: 'Professional Pilot',
-        price: '$49/mo',
-        willingnessFeedback: 'Optimal tier targeted at active creators shipping multiple products.',
-        features: [
-          'Unlimited URL audit scans',
-          'AI copywriting suggestions',
-          'Custom shareable PDF exports'
-        ],
-        psychologyMetric: 'Core value anchor (Recommended)'
-      },
-      {
-        tierName: 'Enterprise Wingman',
-        price: '$149/mo',
-        willingnessFeedback: 'Suits VC scouts and power studios monitoring market pipelines.',
-        features: [
-          'Priority API audit integrations',
-          'White-label reporting certificates',
-          'Monthly 1-on-1 growth consulting'
-        ],
-        psychologyMetric: 'Premium price contrast anchor'
+        segment: 'SaaS Agency Founders',
+        willingnessToPay: 85,
+        whyTheyBuy: 'Require high-volume scans to optimize client conversion funnels and validate pricing tiers.',
+        bestOffer: 'Agency Studio Bundle ($79/mo) with unlimited scans.'
       }
     ],
-    roadmap: [
+    advantageMap: {
+      strongestAsset: 'Excellent automated execution speed and high-fidelity heuristic suggestions.',
+      hiddenAsset: 'Structured JSON exporter ready for automated database webhooks integration.',
+      moatPotential: 'Dynamic scoring certificate network acting as organic viral acquisition loops.',
+      howToAmplify: [
+        'Place the verification certificate badge prominently on the user dashboard.',
+        'Encourage users to tweet their value certificate output to trigger growth bonuses.'
+      ]
+    },
+    growthLevers: [
       {
-        day: 1,
-        task: `Update the landing page headline based on "${projectName}" value-centric recommendations to emphasize output over mechanism.`,
-        expectedResult: 'Instantly increases landing page conversion rate and lowers visitor bounce speed.'
+        lever: 'Build-in-Public Social Loops',
+        channel: 'X / Twitter',
+        whyItWorks: 'Founders love showing off validation scores and verification badges.',
+        firstAction: 'Provide an instant one-click Share button prefilled with the certificate seal link.'
       },
       {
-        day: 3,
-        task: 'Implement the three subscription pricing tiers, highlighting the Professional Plan.',
-        expectedResult: 'Elevates Willingness-To-Pay (WTP) capture and average revenue per user (ARPU).'
+        lever: 'Side-project Marketing Directory',
+        channel: 'Directory Listings',
+        whyItWorks: 'Free submissions generate valuable backlinks and direct organic SEO index rankings.',
+        firstAction: 'Submit the top-voted product audit pages to web search engine crawlers.'
+      }
+    ],
+    mentorReports: normalizedMentorReports,
+    actionPlan: {
+      next24Hours: [
+        'Switch backend model prompts to focus strictly on commercial diagnostic vectors.',
+        'Remove Visual Hotspot elements from UI view state configurations.'
+      ],
+      next7Days: [
+        'Deploy the local localStorage Pilot Credits engine in the frontend SPA.',
+        'Hook up Earn Credits growth panel checks.'
+      ],
+      next30Days: [
+        'Launch public mentor boards with selected business leader opinions.',
+        'Introduce direct verification certificate image sharing intents.'
+      ],
+      next90Days: [
+        'Evaluate integration of D1 SQL database schemas for global invite leaderboards.',
+        'Scale API query endpoints to process batch requests from external apps.'
+      ]
+    },
+    riskWarnings: [
+      {
+        risk: 'High dependency on upstream AI response stability.',
+        severity: 'high',
+        fix: 'Implement robust fallback JSON report triggers in the API middleware.'
       },
       {
-        day: 7,
-        task: 'Initiate a secondary scan of your optimized page on IdeaPilot to download and share your A-grade verification certificate.',
-        expectedResult: 'Establishes visible trust indicators for your Product Hunt or Twitter launch.'
+        risk: 'Indie builders bypassing Turnstile validation endpoints.',
+        severity: 'medium',
+        fix: 'Activate Cloudflare Web Application Firewall (WAF) managed rulesets.'
       }
     ]
   };

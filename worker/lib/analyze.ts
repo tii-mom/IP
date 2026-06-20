@@ -8,7 +8,7 @@ export async function handleAnalyzeRoute(request: Request, env: Env): Promise<Re
 
   try {
     const body: any = await request.json();
-    const { url, projectType, audience, details, turnstileToken } = body;
+    const { url, projectType, audience, details, analysisMode, selectedMentors, turnstileToken } = body;
 
     if (!url) {
       return new Response(JSON.stringify({ error: 'Project landing page URL is required.' }), {
@@ -37,7 +37,16 @@ export async function handleAnalyzeRoute(request: Request, env: Env): Promise<Re
     }
 
     // Call DeepSeek audit completion generator
-    const report = await generateIPValueReport(url, projectName, projectType, audience, details, env);
+    const report = await generateIPValueReport(
+      url,
+      projectName,
+      projectType,
+      audience,
+      details,
+      analysisMode || 'quick_scan',
+      selectedMentors || [],
+      env
+    );
 
     return new Response(JSON.stringify(report), {
       status: 200,

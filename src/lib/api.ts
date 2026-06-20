@@ -1,12 +1,6 @@
-import { AuditResult } from '../types/audit';
+import { BusinessAuditResult, AnalyzeRequest } from '../types/audit';
 
-export async function analyzeWebsite(params: {
-  url: string;
-  projectType: string;
-  audience: string;
-  details: string;
-  turnstileToken?: string;
-}): Promise<AuditResult> {
+export async function analyzeWebsite(params: AnalyzeRequest): Promise<BusinessAuditResult> {
   const apiBaseUrl = (import.meta as any).env.VITE_API_BASE_URL || '';
   
   const response = await fetch(`${apiBaseUrl}/api/analyze`, {
@@ -17,6 +11,8 @@ export async function analyzeWebsite(params: {
       projectType: params.projectType,
       audience: params.audience,
       details: params.details,
+      analysisMode: params.analysisMode,
+      selectedMentors: params.selectedMentors,
       turnstileToken: params.turnstileToken || '1x00000000000000000000AA' // test key fallback
     }),
   });
@@ -28,3 +24,4 @@ export async function analyzeWebsite(params: {
 
   return response.json();
 }
+

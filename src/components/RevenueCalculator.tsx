@@ -1,7 +1,7 @@
-import { AuditResult } from '../types/audit';
+import { BusinessAuditResult } from '../types/audit';
 
 interface RevenueCalculatorProps {
-  auditResult: AuditResult;
+  auditResult: BusinessAuditResult;
   fixedHotspots: number[];
   calcMonthlyTraffic: number;
   setCalcMonthlyTraffic: (val: number) => void;
@@ -10,7 +10,7 @@ interface RevenueCalculatorProps {
 }
 
 export default function RevenueCalculator({
-  auditResult,
+  auditResult: _auditResult,
   fixedHotspots,
   calcMonthlyTraffic,
   setCalcMonthlyTraffic,
@@ -18,7 +18,7 @@ export default function RevenueCalculator({
   setCalcAOV,
 }: RevenueCalculatorProps) {
   // CR boosts based on resolved hotspots
-  const resolvedRatio = auditResult.hotspots.length > 0 ? (fixedHotspots.length / auditResult.hotspots.length) : 0;
+  const resolvedRatio = 0;
   const crBoost = resolvedRatio * 0.018; // maximum 1.8% boost
   const finalCR = 0.012 + crBoost;
   const beforeRevenue = calcMonthlyTraffic * 0.012 * calcAOV;
@@ -48,7 +48,7 @@ export default function RevenueCalculator({
         <div className="bg-slate-900/80 border border-slate-805 p-3 rounded-2xl flex flex-col items-center justify-center shrink-0 min-w-32">
           <span className="text-[9px] text-slate-500 font-mono uppercase font-black">Fix Progress</span>
           <span className="text-sm font-black text-emerald-400 font-mono">
-            {fixedHotspots.length} / {auditResult.hotspots.length} Resolved
+            {fixedHotspots.length} Resolved
           </span>
         </div>
       </div>

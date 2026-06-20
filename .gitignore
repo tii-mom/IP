@@ -6,9 +6,8 @@ dist/
 .wrangler/
 
 # Environment & secrets (NEVER commit)
-.env
-.env.local
-.env.*.local
+.env*
+!.env.example
 .dev.vars
 
 # Cloudflare

@@ -1,11 +1,11 @@
 import { useRef, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { AuditResult } from '../types/audit';
+import { BusinessAuditResult } from '../types/audit';
 
 interface CertificateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  auditResult: AuditResult;
+  auditResult: BusinessAuditResult;
   targetUrl: string;
   dynamicallyAdjustedScore: number;
   dynamicGrade: string;
@@ -162,9 +162,9 @@ export default function CertificateModal({
     ctx.textAlign = 'left';
     ctx.fillStyle = '#94a3b8';
     ctx.font = '14px monospace';
-    ctx.fillText(`• LP Conv: ${auditResult.metrics.landingPageConversion}%`, 880, 440);
-    ctx.fillText(`• Price Struct: ${auditResult.metrics.pricingStructure}%`, 880, 465);
-    ctx.fillText(`• Willingness To Pay: ${auditResult.metrics.willingnessToPay}%`, 880, 490);
+    ctx.fillText(`• Comm Value: ${auditResult.metrics.commercialValue}%`, 880, 440);
+    ctx.fillText(`• Painkiller Index: ${auditResult.metrics.painkillerIndex}%`, 880, 465);
+    ctx.fillText(`• Monetization: ${auditResult.metrics.monetizationClarity}%`, 880, 490);
 
     ctx.fillStyle = '#64748b';
     ctx.font = '15px monospace';
@@ -264,9 +264,9 @@ export default function CertificateModal({
               </div>
               <hr className="border-slate-900" />
               <div className="space-y-2 text-xs font-mono text-slate-400">
-                <p>• LP Conv: {auditResult.metrics.landingPageConversion}%</p>
-                <p>• Price Struct: {auditResult.metrics.pricingStructure}%</p>
-                <p>• WTP Rate: {auditResult.metrics.willingnessToPay}%</p>
+                <p>• Comm Value: {auditResult.metrics.commercialValue}%</p>
+                <p>• Painkiller: {auditResult.metrics.painkillerIndex}%</p>
+                <p>• Monetization: {auditResult.metrics.monetizationClarity}%</p>
               </div>
             </div>
 
