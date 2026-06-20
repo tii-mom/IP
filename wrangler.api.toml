@@ -9,3 +9,11 @@ ALLOWED_ORIGINS = "http://localhost:5173,https://ideapilot.pages.dev"
 APP_ENV = "production"
 SITE_URL = "https://ideapilot.pages.dev"
 API_BASE_URL = "https://ideapilot-api.workers.dev"
+
+[env.staging.vars]
+APP_ENV = "staging"
+ALLOWED_ORIGINS = "https://staging.ideapilot-web.pages.dev"
+DEEPSEEK_BASE_URL = "https://api.deepseek.com"
+DEEPSEEK_MODEL = "deepseek-v4-flash"
+SITE_URL = "https://staging.ideapilot-web.pages.dev"
+API_BASE_URL = "https://ideapilot-api-staging.348421501.workers.dev"
