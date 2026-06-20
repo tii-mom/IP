@@ -296,7 +296,7 @@ You must return your response in JSON format. Provide detailed prescriptions, av
     app.use(vite.middlewares);
   }
 
-  const port = 3000;
+  const port = parseInt(process.env.PORT || '3000', 10);
   app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
   });
