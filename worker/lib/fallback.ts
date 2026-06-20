@@ -1,7 +1,110 @@
 import { BusinessAuditResult } from '../types';
 
-export function generateFallbackReport(url: string, projectName: string): BusinessAuditResult {
+export function generateFallbackReport(
+  url: string,
+  projectName: string,
+  analysisMode?: 'quick_scan' | 'single_mentor' | 'mentor_board',
+  selectedMentors?: string[]
+): BusinessAuditResult {
   const finalScore = 78;
+
+  const mentorGlossary: Record<string, { mentorName: string; lens: string; score: number; verdict: string; keyAdvice: string[]; blindSpot: string }> = {
+    elon_musk: {
+      mentorName: 'Elon Musk',
+      lens: 'Musk-style Scale Lens',
+      score: 75,
+      verdict: 'Good utility, but lacks massive system leverage to command broad market share.',
+      keyAdvice: [
+        'Automate the HTML extraction scraper to crawl thousands of sites concurrently.',
+        'Open API hooks to build an ecosystem rather than a standalone dashboard.'
+      ],
+      blindSpot: 'Requires heavy upfront cloud infrastructure configuration.'
+    },
+    steve_jobs: {
+      mentorName: 'Steve Jobs',
+      lens: 'Jobs-style Positioning Lens',
+      score: 82,
+      verdict: 'Clear layout value, but value proposition copy could be vastly simplified.',
+      keyAdvice: [
+        'Strip non-essential details from the dashboard to elevate focus on the score.',
+        'Position the seal certificate as an emotional badge of honor.'
+      ],
+      blindSpot: 'Tends to overlook the raw engineering workflow requirements of developers.'
+    },
+    naval_ravikant: {
+      mentorName: 'Naval Ravikant',
+      lens: 'Naval-style Solo Leverage Lens',
+      score: 90,
+      verdict: 'Excellent product for a solo developer utilizing code and content leverage.',
+      keyAdvice: [
+        'Keep running costs minimal by hosting backend functions exclusively on Cloudflare Workers.',
+        'Let product quality drive word-of-mouth adoption without paid sales staff.'
+      ],
+      blindSpot: 'Vulnerable to sudden changes in upstream LLM api billing models.'
+    },
+    larry_ellison: {
+      mentorName: 'Larry Ellison',
+      lens: 'Ellison-style Enterprise Lens',
+      score: 76,
+      verdict: 'Good utility, but needs direct B2B corporate sales locking mechanisms.',
+      keyAdvice: [
+        'Create enterprise seats controls and target design agencies.',
+        'Bundle active audits into a client reporting white-label PDF.'
+      ],
+      blindSpot: 'High touch sales cycle takes away velocity.'
+    },
+    mark_zuckerberg: {
+      mentorName: 'Mark Zuckerberg',
+      lens: 'Zuckerberg-style Growth Lens',
+      score: 80,
+      verdict: 'Lacks built-in viral distribution features to capture high growth speeds.',
+      keyAdvice: [
+        'Establish direct invite credits bonuses to turn users into promoters.',
+        'Inject watermark seal badges onto all generated public dashboards.'
+      ],
+      blindSpot: 'Growth loops may dilute the professional brand of validation seals.'
+    },
+    jeff_bezos: {
+      mentorName: 'Jeff Bezos',
+      lens: 'Bezos-style Flywheel Lens',
+      score: 84,
+      verdict: 'Needs to reinvest data margins to create a structural operations moat.',
+      keyAdvice: [
+        'Collect anonymized project metadata to construct market readiness reports.',
+        'Continuously lower query latency and costs to build operational leverage.'
+      ],
+      blindSpot: 'Requires significant upfront volume to initiate the data flywheel.'
+    }
+  };
+
+  let mentorsToScan = selectedMentors && selectedMentors.length > 0 ? selectedMentors : ['elon_musk', 'steve_jobs', 'naval_ravikant'];
+  if (analysisMode === 'quick_scan') {
+    mentorsToScan = ['naval_ravikant'];
+  } else if (analysisMode === 'single_mentor') {
+    mentorsToScan = selectedMentors && selectedMentors.length > 0 ? [selectedMentors[0]] : ['steve_jobs'];
+  }
+
+  const normalizedMentorReports = mentorsToScan.map(m => {
+    const defaultData = {
+      mentorName: m.charAt(0).toUpperCase() + m.slice(1).replace('_', ' '),
+      lens: `${m}-style Lens`,
+      score: 80,
+      verdict: 'Satisfactory product design with room for growth.',
+      keyAdvice: ['Validate user engagement metrics early.'],
+      blindSpot: 'Vulnerable to localized market saturation.'
+    };
+    const prof = mentorGlossary[m] || defaultData;
+    return {
+      mentorId: m,
+      mentorName: prof.mentorName,
+      lens: prof.lens,
+      score: prof.score,
+      verdict: prof.verdict,
+      keyAdvice: prof.keyAdvice,
+      blindSpot: prof.blindSpot
+    };
+  });
+
   return {
     projectName: projectName,
     url: url,
@@ -75,44 +178,7 @@ export function generateFallbackReport(url: string, projectName: string): Busine
         firstAction: 'Submit the top-voted product audit pages to web search engine crawlers.'
       }
     ],
-    mentorReports: [
-      {
-        mentorId: 'elon_musk',
-        mentorName: 'Elon Musk',
-        lens: 'Musk-style Scale Lens',
-        score: 75,
-        verdict: 'Good utility, but lacks massive system leverage to command broad market share.',
-        keyAdvice: [
-          'Automate the HTML extraction scraper to crawl thousands of sites concurrently.',
-          'Open API hooks to build an ecosystem rather than a standalone dashboard.'
-        ],
-        blindSpot: 'Requires heavy upfront cloud infrastructure configuration.'
-      },
-      {
-        mentorId: 'steve_jobs',
-        mentorName: 'Steve Jobs',
-        lens: 'Jobs-style Positioning Lens',
-        score: 82,
-        verdict: 'Clear layout value, but value proposition copy could be vastly simplified.',
-        keyAdvice: [
-          'Strip non-essential details from the dashboard to elevate focus on the score.',
-          'Position the seal certificate as an emotional badge of honor.'
-        ],
-        blindSpot: 'Tends to overlook the raw engineering workflow requirements of developers.'
-      },
-      {
-        mentorId: 'naval_ravikant',
-        mentorName: 'Naval Ravikant',
-        lens: 'Naval-style Solo Leverage Lens',
-        score: 90,
-        verdict: 'Excellent product for a solo developer utilizing code and content leverage.',
-        keyAdvice: [
-          'Keep running costs minimal by hosting backend functions exclusively on Cloudflare Workers.',
-          'Let product quality drive word-of-mouth adoption without paid sales staff.'
-        ],
-        blindSpot: 'Vulnerable to sudden changes in upstream LLM api billing models.'
-      }
-    ],
+    mentorReports: normalizedMentorReports,
     actionPlan: {
       next24Hours: [
         'Switch backend model prompts to focus strictly on commercial diagnostic vectors.',

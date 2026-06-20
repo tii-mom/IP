@@ -17,9 +17,11 @@ export function validateBusinessAuditResult(report: any): boolean {
 export function normalizeBusinessAuditResult(
   raw: any,
   url: string,
-  projectName: string
+  projectName: string,
+  analysisMode?: 'quick_scan' | 'single_mentor' | 'mentor_board',
+  selectedMentors?: string[]
 ): BusinessAuditResult {
-  const fallback = generateFallbackReport(url, projectName);
+  const fallback = generateFallbackReport(url, projectName, analysisMode, selectedMentors);
 
   const safe = (val: any, def: any) => (val !== undefined && val !== null ? val : def);
 
@@ -135,7 +137,7 @@ export async function generateIPValueReport(
 
   if (!apiKey) {
     console.warn('DEEPSEEK_API_KEY is not defined. Falling back to local heuristics generator.');
-    return generateFallbackReport(url, projectName);
+    return generateFallbackReport(url, projectName, analysisMode, selectedMentors);
   }
 
   // Define mentor profile mapping
@@ -292,15 +294,15 @@ Return a JSON object conforming exactly to this structure:
 
     if (!content) {
       console.error('DeepSeek returned empty content.');
-      return generateFallbackReport(url, projectName);
+      return generateFallbackReport(url, projectName, analysisMode, selectedMentors);
     }
 
     const parsed = JSON.parse(content.trim());
     
     // Normalize and validate response data
-    return normalizeBusinessAuditResult(parsed, url, projectName);
+    return normalizeBusinessAuditResult(parsed, url, projectName, analysisMode, selectedMentors);
   } catch (err: any) {
     console.error('Failed to generate business audit report from DeepSeek:', err);
-    return generateFallbackReport(url, projectName);
+    return generateFallbackReport(url, projectName, analysisMode, selectedMentors);
   }
 }
