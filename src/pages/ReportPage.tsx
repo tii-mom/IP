@@ -1,7 +1,7 @@
 import {
   Layout,
   ExternalLink,
-  Printer,
+  RefreshCcw,
   Share2,
   CheckCircle,
   AlertTriangle,
@@ -17,8 +17,7 @@ interface ReportPageProps {
   setCalcMonthlyTraffic: (val: number) => void;
   calcAOV: number;
   setCalcAOV: (val: number) => void;
-  setIsPrintModalOpen: (open: boolean) => void;
-  setIsCertificateModalOpen: (open: boolean) => void;
+  setIsShareModalOpen: (open: boolean) => void;
   handleReset: () => void;
 }
 
@@ -29,8 +28,8 @@ export default function ReportPage({
   setCalcMonthlyTraffic,
   calcAOV,
   setCalcAOV,
-  setIsPrintModalOpen,
-  setIsCertificateModalOpen,
+  setIsShareModalOpen,
+  handleReset,
 }: ReportPageProps) {
   const { t, language } = useI18n();
 
@@ -77,19 +76,19 @@ export default function ReportPage({
         {/* Global Dashboard Actions */}
         <div className="flex items-center gap-3 w-full md:w-auto">
           <button
-            onClick={() => setIsPrintModalOpen(true)}
+            onClick={handleReset}
             className="flex-1 md:flex-initial py-2 px-4 border border-slate-880 hover:border-slate-700 bg-slate-900/40 hover:bg-slate-900 rounded-xl text-xs text-slate-300 hover:text-white transition font-mono flex items-center justify-center gap-1.5 cursor-pointer"
           >
-            <Printer className="h-3.5 w-3.5" />
-            <span>{t.report.printReport}</span>
+            <RefreshCcw className="h-3.5 w-3.5" />
+            <span>{t.common.newAudit}</span>
           </button>
 
           <button
-            onClick={() => setIsCertificateModalOpen(true)}
+            onClick={() => setIsShareModalOpen(true)}
             className="flex-1 md:flex-initial py-2 px-4 bg-indigo-600 hover:bg-indigo-500 hover:glow-indigo text-white rounded-xl text-xs font-semibold font-mono flex items-center justify-center gap-1.5 cursor-pointer transition shadow-lg shadow-indigo-600/15"
           >
             <Share2 className="h-3.5 w-3.5" />
-            <span>{t.report.genCertificate}</span>
+            <span>{t.shareCard.generate}</span>
           </button>
         </div>
       </div>

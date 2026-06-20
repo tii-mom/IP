@@ -160,14 +160,23 @@ export const zhCN: TranslationDictionary = {
     complete: '🚀 [4.0s] 商业价值评估报告编译完成！',
     multiFactor: '正在运行多因子商业可行性分析...'
   },
-  certificate: {
-    title: '生成动态商业化验证印章',
-    subtitle: '在分发共享前，可自定义与你品牌色调匹配的视觉主题。',
-    verificationStats: '印章参数指标',
-    issuedBy: '由 IDEAPILOT GPT 评估套件签发',
-    verified: '已验证',
-    downloadPng: '下载 PNG 图片',
-    score: '评分',
-    grade: '评级'
+  shareCard: {
+    title: '生成评估分享图',
+    subtitle: '生成一张适合社交平台传播的项目商业评估分享卡。',
+    generate: '生成分享图',
+    downloadPng: '下载 PNG',
+    share: '分享',
+    copyCaption: '复制分享文案',
+    copied: '已复制!',
+    projectUrl: '项目网址',
+    businessValueScore: '商业价值评分',
+    grade: '评级',
+    recommendedPositioning: '推荐定位',
+    biggestOpportunity: '最大机会',
+    platformIntro: 'IdeaPilot：面向独立开发者的 AI 商业导师系统，帮助项目找到赚钱路径、目标买家和增长杠杆。',
+    printing: '报告打印中...',
+    ready: '生成成功',
+    shareFallbackNotice: '分享文案已复制，分享图已开始下载！由于浏览器限制，请手动上传图片到 X / Twitter。',
+    manualUploadHint: '图片已下载，文案已复制。请手动上传图片到 X / Twitter。'
   }
 };
