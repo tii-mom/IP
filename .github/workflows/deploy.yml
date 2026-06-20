@@ -1,0 +1,41 @@
+name: IdeaPilot MVP CI/CD Gates
+
+on:
+  pull_request:
+    branches:
+      - main
+      - release/cloudflare-deepseek-mvp
+  push:
+    branches:
+      - main
+      - release/cloudflare-deepseek-mvp
+      - feature/business-mentor-credits-system
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Build frontend SPA
+        run: npm run build
+
+      - name: Start Wrangler and run Smoke Tests
+        run: |
+          npx wrangler dev --config wrangler.api.toml &
+          node scripts/smoke-test.mjs
+        env:
+          CLOUDFLARE_TELEMETRY_DISABLED: 1

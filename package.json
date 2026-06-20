@@ -5,14 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:pages": "wrangler pages dev dist --compatibility-date=2024-11-01",
+    "dev:api": "wrangler dev --config wrangler.api.toml",
     "build": "vite build",
-    "build:full": "vite build && wrangler pages functions build --outdir dist",
     "lint": "tsc --noEmit",
-    "start": "wrangler pages dev dist --compatibility-date=2024-11-01",
-    "deploy": "npm run build && wrangler pages deploy dist",
-    "db:init": "wrangler d1 execute ideapilot --remote --file=./db/schema.sql",
-    "db:init:local": "wrangler d1 execute ideapilot --local --file=./db/schema.sql"
+    "deploy:api": "wrangler deploy --config wrangler.api.toml",
+    "deploy:web": "wrangler pages deploy dist --project-name=ideapilot-web",
+    "deploy:staging": "wrangler pages deploy dist --project-name=ideapilot-web --branch=staging && wrangler deploy --config wrangler.api.toml --env staging"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
