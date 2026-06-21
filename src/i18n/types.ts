@@ -175,5 +175,23 @@ export interface TranslationDictionary {
     ready: string;
     shareFallbackNotice: string;
     manualUploadHint: string;
+    estimatedValue: string;
+  };
+  valuation: {
+    title: string;
+    rangeLabel: string;
+    confidence: string;
+    rationale: string;
+    valueDrivers: string;
+    method: string;
+    disclaimer: string;
+  };
+  investorLens: {
+    title: string;
+    subtitle: string;
+    thesis: string;
+    whyValuable: string;
+    increaseValuation: string;
+    confidenceBoost: string;
   };
 }

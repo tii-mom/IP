@@ -260,6 +260,62 @@ export function generateFallbackReport(
         }
       ],
       mentorReports: normalizedMentorReports,
+      valuation: {
+        estimatedValueMin: 18000,
+        estimatedValueMax: 65000,
+        currency: 'USD',
+        label: '早期项目 AI 估算价值',
+        confidence: 72,
+        valuationMethod: '结合商业价值、变现清晰度、买家匹配度及增长杠杆的多因子权重早期项目估值模型。',
+        rationale: '该项目具有清晰的变现路径和高可执行的增长杠杆，但在企业级大客户拓展及网络效应壁垒上仍有提升空间。综合评估后，在早期阶段估值区间为 $18,000 - $65,000。',
+        valueDrivers: [
+          '明确的订阅制收费模式与低开发维护成本',
+          '痛点明确，面向高付费意愿的 SaaS 开发者群体',
+          '极强的个人代码与内容分发杠杆潜力'
+        ],
+        disclaimer: '该估值为 IdeaPilot AI 商业评估模型生成的参考区间，不构成投资、融资、收购或财务建议。'
+      },
+      investorLensReports: [
+        {
+          investorId: 'sequoia',
+          investorName: 'Sequoia Capital',
+          lens: '红杉式市场深度视角',
+          score: 75,
+          thesis: '受红杉资本投资哲学启发：我们关注该项目在独立开发者生态中的定位，市场虽然垂直但开发者付费意愿明确。若能构建成多项目管理平台，市场深度将极大提升。',
+          whyItCouldBeValuable: '开发者工具具有高黏性，一旦成为工作流核心，迁移成本极高。',
+          whatWouldIncreaseValuation: [
+            '支持多团队协同与白标报告导出',
+            '提供自动化的集成 API 接口'
+          ],
+          confidenceBoost: '这是一个极具潜力的垂直切入点，专注于解决核心痛点并不断做深市场，你将构建出稳固的商业壁垒！'
+        },
+        {
+          investorId: 'a16z',
+          investorName: 'Andreessen Horowitz',
+          lens: 'a16z 式产品叙事视角',
+          score: 82,
+          thesis: '受 Andreessen Horowitz (a16z) 投资哲学启发：软件正在吞噬世界，而 AI 正在重构软件开发流。项目通过 AI 提供商业指导，具备极佳的产品叙事性与时代背景契合度。',
+          whyItCouldBeValuable: '利用 AI 导师提供即时反馈，大幅缩短了传统咨询的链路，具备极强的软件杠杆。',
+          whatWouldIncreaseValuation: [
+            '建立更加丰富的 AI 导师预设和个性化知识库导入',
+            '打造可公开分享的审计报告社区，利用网络效应进行裂变'
+          ],
+          confidenceBoost: 'AI 重塑了独立开发者的生产力，你的叙事十分性感，继续放大产品的传播属性，让更多人参与进来！'
+        },
+        {
+          investorId: 'ycombinator',
+          investorName: 'Y Combinator',
+          lens: 'YC 式创始人速度视角',
+          score: 85,
+          thesis: '受 Y Combinator (YC) 投资哲学启发：快速上线、快速获取反馈、持续迭代。该项目目前功能高度聚焦，能够帮助用户在 2 分钟内获得报告，符合极速验证的理念。',
+          whyItCouldBeValuable: '创始人展现出极高的交付速度，产品直击开发者“无法科学评估商业价值”的痛点。',
+          whatWouldIncreaseValuation: [
+            '每天根据用户真实反馈进行小版本更新迭代',
+            '加入一键发布到 Product Hunt/Twitter 的集成功能'
+          ],
+          confidenceBoost: 'YC 强调“做用户想要的东西”。你的交付速度令人振奋，请继续保持与用户的极速沟通，用事实和数据说话！'
+        }
+      ],
       actionPlan: {
         next24Hours: [
           '切换后端模型 Prompt，将重点严格放在商业诊断维度上。',
@@ -274,7 +330,7 @@ export function generateFallbackReport(
           '引入直接验证证书图像分享意图。'
         ],
         next90Days: [
-          '评估用于全球邀请排行榜的 D1 SQL 数据库 Schema 的集成。',
+          '评估用于全球邀请排行榜 of D1 SQL 数据库 Schema 的集成。',
           '扩展 API 查询端点，以处理来自外部应用的批量请求。'
         ]
       },
@@ -368,6 +424,62 @@ export function generateFallbackReport(
       }
     ],
     mentorReports: normalizedMentorReports,
+    valuation: {
+      estimatedValueMin: 18000,
+      estimatedValueMax: 65000,
+      currency: 'USD',
+      label: 'Early-stage AI estimated project value',
+      confidence: 72,
+      valuationMethod: 'Score-weighted early project valuation based on commercial value, monetization clarity, buyer fit, and growth leverage.',
+      rationale: 'The project displays clear monetization routes and high-execution growth levers, but has room to grow in enterprise segment penetration and structural moats. This positions it in the $18,000 - $65,000 reference range.',
+      valueDrivers: [
+        'Clear subscription model with minimal ongoing maintenance overhead.',
+        'High buyer fit for developers willing to spend on saving validation time.',
+        'Leveraged code distribution potential with minimal custom support.'
+      ],
+      disclaimer: 'This valuation is an AI-generated reference range and does not constitute investment, fundraising, acquisition, or financial advice.'
+    },
+    investorLensReports: [
+      {
+        investorId: 'sequoia',
+        investorName: 'Sequoia Capital',
+        lens: 'Sequoia-style Market Depth Lens',
+        score: 75,
+        thesis: 'Inspired by Sequoia Capital’s investment philosophy: We look for projects that can define a category. While currently a niche tool for indie builders, scaling this to support teams and design agencies would unlock profound market depth.',
+        whyItCouldBeValuable: 'High workflows stickiness. Developers who rely on automated audits will find it costly to migrate to manual consultants.',
+        whatWouldIncreaseValuation: [
+          'Introduce team collaboration workspaces and custom white-labeled export reports.',
+          'Build a secure public API endpoint to support high-concurrency automated audits.'
+        ],
+        confidenceBoost: 'This is a very clean wedge into the indie builder space. Keep focusing on the core user need and widen the market depth!'
+      },
+      {
+        investorId: 'a16z',
+        investorName: 'Andreessen Horowitz',
+        lens: 'a16z-style Product Narrative Lens',
+        score: 82,
+        thesis: 'Inspired by Andreessen Horowitz’s investment philosophy: Software is eating the world, and AI is rewriting the rules of building software. Auditing startup viability with AI represents a strong narrative leveraging modern LLMs.',
+        whyItCouldBeValuable: 'AI-led audit simplifies business consulting into a self-serve platform, creating massive software leverage.',
+        whatWouldIncreaseValuation: [
+          'Add customizable AI mentor prompt inputs and personal knowledge base training.',
+          'Create a public registry of project audit results to kickstart content-based network loops.'
+        ],
+        confidenceBoost: 'Your product narrative is compelling and taps directly into the current AI wave. Expand its viral shareability to capture more users!'
+      },
+      {
+        investorId: 'ycombinator',
+        investorName: 'Y Combinator',
+        lens: 'YC-style Founder Velocity Lens',
+        score: 85,
+        thesis: 'Inspired by Y Combinator’s investment philosophy: Launch fast, talk to users, and iterate rapidly. The simplified 2-minute audit loop is highly aligned with early validation principles.',
+        whyItCouldBeValuable: 'Addresses the builder’s struggle of objectively measuring monetization potential before writing code.',
+        whatWouldIncreaseValuation: [
+          'Ship micro-updates daily based on user feedback and session drop-offs.',
+          'Integrate automated submission forms to launch directly on Product Hunt or directory list sites.'
+        ],
+        confidenceBoost: 'Make something people want. Your launch speed is impressive—continue listening to builders and double down on what works!'
+      }
+    ],
     actionPlan: {
       next24Hours: [
         'Switch backend model prompts to focus strictly on commercial diagnostic vectors.',

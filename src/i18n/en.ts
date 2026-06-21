@@ -27,7 +27,7 @@ export const en: TranslationDictionary = {
     badge: 'AI BUSINESS MENTOR BOARD FOR INDIE BUILDERS',
     title: 'Evaluate Your Product',
     subtitle: 'Submit your product website and discover how it can make money, who would pay for it, and which advantages to amplify under custom business mentor lenses.',
-    inputPlaceholder: 'stripe.com',
+    inputPlaceholder: 'https://your-project.com',
     analyzeButton: 'Analyze Business Value',
     verifyCredits: 'Verify your API credits count:',
     sampleLinks: 'Or inspect verified samples:'
@@ -177,6 +177,24 @@ export const en: TranslationDictionary = {
     printing: 'Generating Report...',
     ready: 'Preview Ready',
     shareFallbackNotice: 'Caption copied and PNG download started! Since browser sharing limits image attachments, please upload the image manually.',
-    manualUploadHint: 'Image downloaded. Caption copied. Please upload manually to X / Twitter.'
+    manualUploadHint: 'Image downloaded. Caption copied. Please upload manually to X / Twitter.',
+    estimatedValue: 'AI Estimated Value'
+  },
+  valuation: {
+    title: 'AI Estimated Project Value',
+    rangeLabel: 'Project Value Heuristic Range',
+    confidence: 'Confidence',
+    rationale: 'Valuation Rationale',
+    valueDrivers: 'Value Drivers',
+    method: 'Valuation Method',
+    disclaimer: 'Disclaimer: This valuation is an AI-generated reference range and does not constitute investment, fundraising, acquisition, or financial advice.'
+  },
+  investorLens: {
+    title: 'Investor Lens Review',
+    subtitle: 'Inspired by professional VC philosophies. These are heuristic assessments, not formal evaluations.',
+    thesis: 'Investment Thesis',
+    whyValuable: 'Why It Could Be Valuable',
+    increaseValuation: 'What Would Increase Valuation',
+    confidenceBoost: 'Grounded Actionable Encouragement'
   }
 };

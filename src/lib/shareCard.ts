@@ -167,7 +167,7 @@ export function drawShareCard({
   ctx.fillText(truncatedUrl, 70, 475);
 
 
-  // RIGHT COLUMN: Score box & 3 Metrics (X = 760 to 1130, width 370)
+  // RIGHT COLUMN: Score box, Valuation box & 3 Metrics (X = 760 to 1130, width 370)
   
   // 1. Score Box
   ctx.fillStyle = '#ffffff';
@@ -194,9 +194,28 @@ export function drawShareCard({
   ctx.font = `bold 28px ${sansFont}`;
   ctx.fillText(`${grade} RANK`, 980, 255);
 
-  // 2. 3 Metrics
-  const metricsYStart = 350;
-  const metricsSpacing = 50;
+  // 2. Project Valuation Box
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(760, 320, 370, 85);
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(760, 320, 370, 85);
+
+  // Valuation title
+  ctx.fillStyle = '#64748b';
+  ctx.font = `bold 11px ${monoFont}`;
+  ctx.fillText(t.shareCard.estimatedValue.toUpperCase(), 785, 345);
+
+  // Valuation Value
+  ctx.fillStyle = '#4f46e5';
+  ctx.font = `bold 22px ${sansFont}`;
+  const minVal = auditResult.valuation?.estimatedValueMin?.toLocaleString() || '18,000';
+  const maxVal = auditResult.valuation?.estimatedValueMax?.toLocaleString() || '65,000';
+  ctx.fillText(`$${minVal} - $${maxVal}`, 785, 385);
+
+  // 3. 3 Metrics
+  const metricsYStart = 435;
+  const metricsSpacing = 35;
 
   const metricItems = [
     { label: t.report.metricLabels.commercialValue, val: auditResult.metrics.commercialValue },
@@ -209,24 +228,24 @@ export function drawShareCard({
     
     // Label
     ctx.fillStyle = '#334155';
-    ctx.font = `bold 13px ${sansFont}`;
+    ctx.font = `bold 12px ${sansFont}`;
     ctx.fillText(item.label, 760, curY);
 
     // Value
     ctx.textAlign = 'right';
     ctx.fillStyle = '#0f172a';
-    ctx.font = `bold 13px ${monoFont}`;
+    ctx.font = `bold 12px ${monoFont}`;
     ctx.fillText(`${item.val}%`, 1130, curY);
     ctx.textAlign = 'left';
 
     // Progress Bar Track
     ctx.fillStyle = '#e2e8f0'; // slate-200
-    ctx.fillRect(760, curY + 8, 370, 6);
+    ctx.fillRect(760, curY + 6, 370, 4);
 
     // Progress Bar Fill
     ctx.fillStyle = '#4f46e5'; // indigo-600
     const fillWidth = (item.val / 100) * 370;
-    ctx.fillRect(760, curY + 8, fillWidth, 6);
+    ctx.fillRect(760, curY + 6, fillWidth, 4);
   });
 
 

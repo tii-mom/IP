@@ -81,9 +81,6 @@ export default function HomePage({
                 {language === 'zh-CN' ? '项目落地页网址 (Landing Page URL)' : 'Product Landing Page URL'}
               </label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500 font-mono text-sm pointer-events-none select-none">
-                  https://
-                </span>
                 <input
                   id="url"
                   type="text"
@@ -91,7 +88,7 @@ export default function HomePage({
                   placeholder={t.hero.inputPlaceholder}
                   value={targetUrl}
                   onChange={(e) => setTargetUrl(e.target.value)}
-                  className="w-full pl-[78px] pr-4 py-4 bg-slate-950 border border-slate-880 rounded-xl font-mono text-white placeholder-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition"
+                  className="w-full pl-4 pr-4 py-4 bg-slate-950 border border-slate-880 rounded-xl font-mono text-white placeholder-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition"
                 />
               </div>
             </div>

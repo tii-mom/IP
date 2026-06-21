@@ -13,10 +13,6 @@ import { useI18n } from '../i18n';
 interface ReportPageProps {
   auditResult: BusinessAuditResult;
   targetUrl: string;
-  calcMonthlyTraffic: number;
-  setCalcMonthlyTraffic: (val: number) => void;
-  calcAOV: number;
-  setCalcAOV: (val: number) => void;
   setIsShareModalOpen: (open: boolean) => void;
   handleReset: () => void;
 }
@@ -24,10 +20,6 @@ interface ReportPageProps {
 export default function ReportPage({
   auditResult,
   targetUrl,
-  calcMonthlyTraffic,
-  setCalcMonthlyTraffic,
-  calcAOV,
-  setCalcAOV,
   setIsShareModalOpen,
   handleReset,
 }: ReportPageProps) {
@@ -36,14 +28,6 @@ export default function ReportPage({
   // Dynamic Score Logic based on simple metrics calculation
   const totalScore = auditResult.score;
   const grade = auditResult.grade;
-
-  // Simple simulator calculation based on monetization metrics
-  const conversionRate = 0.015; // 1.5% baseline
-  const liftRate = 0.025; // 2.5% optimized baseline
-  const beforeRev = calcMonthlyTraffic * conversionRate * calcAOV;
-  const afterRev = calcMonthlyTraffic * liftRate * calcAOV;
-  const monthlyLift = Math.max(0, afterRev - beforeRev);
-  const annualLift = monthlyLift * 12;
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 flex-grow flex flex-col justify-start">
@@ -403,100 +387,130 @@ export default function ReportPage({
         </div>
       </div>
 
-      {/* Simulator Calculator Section */}
+      {/* AI Project Valuation System Section */}
       <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-indigo-950/20 via-slate-900 to-slate-950 border border-indigo-900/40 space-y-6 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none" />
         
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-indigo-950/40 pb-5">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-mono text-[9px] uppercase font-bold">
-              💰 {language === 'zh-CN' ? '收益优化计算器' : 'Value Lift Calculator'}
+              💰 {t.valuation.title}
             </div>
             <h3 className="text-lg font-black text-white font-sans uppercase tracking-tight">
-              {t.report.pricingCalculator}
+              {t.valuation.rangeLabel}
             </h3>
-            <p className="text-xs text-slate-400 font-sans max-w-xl">
-              {t.report.calculatorDesc}
-            </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div className="lg:col-span-4 space-y-6">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between font-mono">
-                <span className="text-xs text-slate-300 font-bold uppercase">{t.report.monthlyTraffic}</span>
-                <span className="text-sm font-black text-indigo-400">
-                  {calcMonthlyTraffic.toLocaleString()} {language === 'zh-CN' ? '次/月' : '/ mo'}
-                </span>
-              </div>
-              <input
-                type="range"
-                min="1000"
-                max="100000"
-                step="2500"
-                value={calcMonthlyTraffic}
-                onChange={(e) => setCalcMonthlyTraffic(parseInt(e.target.value))}
-                className="w-full accent-indigo-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between font-mono">
-                <span className="text-xs text-slate-300 font-bold uppercase">{t.report.simulatedAOV}</span>
-                <span className="text-sm font-black text-cyan-400">
-                  ${calcAOV} USD
-                </span>
-              </div>
-              <input
-                type="range"
-                min="5"
-                max="300"
-                step="5"
-                value={calcAOV}
-                onChange={(e) => setCalcAOV(parseInt(e.target.value))}
-                className="w-full accent-cyan-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
-              />
+          {/* Large Valuation Area */}
+          <div className="lg:col-span-4 p-6 bg-slate-950/60 border border-slate-850 rounded-2xl flex flex-col justify-center items-center text-center h-full min-h-[180px]">
+            <span className="text-[10px] text-slate-500 font-mono uppercase font-bold tracking-wider">
+              {t.valuation.title}
+            </span>
+            <span className="text-3xl font-black font-display text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400 my-3 select-none">
+              ${auditResult.valuation?.estimatedValueMin?.toLocaleString()} - ${auditResult.valuation?.estimatedValueMax?.toLocaleString()}
+            </span>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
+              <span>{t.valuation.confidence}: {auditResult.valuation?.confidence}%</span>
             </div>
           </div>
 
-          <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-950/40 border border-slate-800/40 p-6 rounded-2xl">
-            <div className="space-y-3 p-4 rounded-xl bg-slate-900/40 border border-slate-850">
-              <span className="text-[9.5px] text-rose-400 font-mono uppercase tracking-wider font-bold block">
-                {t.report.baselineEstimate}
+          {/* Rationale & Drivers Area */}
+          <div className="lg:col-span-8 space-y-4">
+            <div>
+              <span className="text-[10px] text-indigo-400 font-mono uppercase block font-bold tracking-wider">
+                {t.valuation.rationale}
               </span>
-              <div className="space-y-1">
-                <span className="text-lg font-bold text-slate-200 font-mono">
-                  ${Math.round(beforeRev).toLocaleString()}
-                </span>
-              </div>
+              <p className="text-sm text-slate-200 mt-1 leading-relaxed font-sans">
+                {auditResult.valuation?.rationale}
+              </p>
             </div>
 
-            <div className="space-y-3 p-4 rounded-xl bg-slate-900/40 border border-slate-850">
-              <span className="text-[9.5px] text-emerald-400 font-mono uppercase tracking-wider font-bold block">
-                {t.report.optimizedEstimate}
+            <div className="pt-3 border-t border-slate-950 space-y-2">
+              <span className="text-[10px] text-cyan-400 font-mono uppercase block font-bold tracking-wider">
+                {t.valuation.valueDrivers}
               </span>
-              <div className="space-y-1">
-                <span className="text-lg font-bold text-emerald-400 font-mono">
-                  ${Math.round(afterRev).toLocaleString()}
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-3 p-4 rounded-xl bg-indigo-950/20 border border-indigo-900/30">
-              <span className="text-[9.5px] text-indigo-400 font-mono uppercase tracking-wider font-bold block">
-                {t.report.simulatedLift}
-              </span>
-              <div className="space-y-1 flex flex-col justify-between">
-                <span className="text-lg font-bold text-white font-mono font-black">
-                  +${Math.round(monthlyLift).toLocaleString()} {language === 'zh-CN' ? '/月' : '/mo'}
-                </span>
-                <span className="text-[10px] text-cyan-400 font-mono">
-                  +${Math.round(annualLift).toLocaleString()} {language === 'zh-CN' ? '/年 ARR' : '/yr ARR'}
-                </span>
-              </div>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {auditResult.valuation?.valueDrivers?.map((driver, i) => (
+                  <li key={i} className="text-xs text-slate-350 flex items-start gap-1.5 font-sans">
+                    <span className="text-indigo-500 select-none font-bold">•</span>
+                    <span>{driver}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="pt-4 border-t border-indigo-950/40 text-[10px] text-slate-500 font-sans italic leading-relaxed">
+          {t.valuation.disclaimer}
+        </div>
+      </div>
+
+      {/* Investor Lens Review Section */}
+      <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-900 space-y-6">
+        <div className="space-y-1">
+          <h3 className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider block">
+            🔍 {t.investorLens.title}
+          </h3>
+          <p className="text-[11px] text-slate-500 font-sans">
+            {t.investorLens.subtitle}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {auditResult.investorLensReports?.map((lensReport) => (
+            <div key={lensReport.investorId} className="p-5 bg-slate-950 border border-slate-850 rounded-xl flex flex-col justify-between min-h-[360px] relative overflow-hidden">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-bold text-white font-mono leading-none">{lensReport.investorName}</h4>
+                    <span className="text-[9px] text-slate-500 font-mono uppercase tracking-wider mt-1.5 block">
+                      {lensReport.lens}
+                    </span>
+                  </div>
+                  <div className="h-10 w-10 bg-indigo-950/20 border border-indigo-900/40 rounded-xl flex items-center justify-center text-xs font-black text-indigo-400 font-mono">
+                    {lensReport.score}/100
+                  </div>
+                </div>
+
+                <div className="bg-slate-900/60 p-3 rounded-lg border border-slate-850">
+                  <span className="text-[9px] text-slate-500 font-mono uppercase font-bold block">{t.investorLens.thesis}</span>
+                  <p className="text-xs text-slate-200 mt-1 leading-relaxed italic font-sans">
+                    "{lensReport.thesis}"
+                  </p>
+                </div>
+
+                <div className="space-y-1.5">
+                  <span className="text-[9px] text-indigo-400 font-mono uppercase font-bold block">{t.investorLens.whyValuable}</span>
+                  <p className="text-xs text-slate-350 leading-relaxed font-sans">
+                    {lensReport.whyItCouldBeValuable}
+                  </p>
+                </div>
+
+                <div className="space-y-1.5">
+                  <span className="text-[9px] text-cyan-400 font-mono uppercase font-bold block">{t.investorLens.increaseValuation}</span>
+                  <ul className="space-y-1 text-xs text-slate-350">
+                    {lensReport.whatWouldIncreaseValuation?.map((item, ai) => (
+                      <li key={ai} className="flex items-start gap-1 font-sans">
+                        <span className="text-cyan-500 select-none">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-900/60 mt-4 bg-indigo-950/10 p-2.5 rounded-lg border border-indigo-900/20">
+                <span className="text-[9px] text-emerald-400 font-mono uppercase font-bold block">{t.investorLens.confidenceBoost}</span>
+                <p className="text-xs text-emerald-350 font-sans mt-0.5 leading-relaxed font-medium">
+                  {lensReport.confidenceBoost}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
