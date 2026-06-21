@@ -9,6 +9,7 @@ import {
 import { BusinessAuditResult, CreditState } from './types/audit';
 import { analyzeWebsite } from './lib/api';
 import { loadCreditState, spendCredits, refundCredits } from './lib/credits';
+import { normalizeUrlForHref } from './lib/url';
 import HomePage from './pages/HomePage';
 import AnalyzingPage from './pages/AnalyzingPage';
 import ReportPage from './pages/ReportPage';
@@ -59,9 +60,7 @@ function AppShell() {
   const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
   const [logProgress, setLogProgress] = useState(0);
 
-  // Calculator states
-  const [calcMonthlyTraffic, setCalcMonthlyTraffic] = useState(5000);
-  const [calcAOV, setCalcAOV] = useState(49);
+
 
   // Initialize credits state on mount
   useEffect(() => {
@@ -85,13 +84,11 @@ function AppShell() {
 
   const handleStartAnalysis = async (e?: React.FormEvent, customUrl?: string) => {
     if (e) e.preventDefault();
-    const urlToAnalyze = customUrl || targetUrl;
-    if (!urlToAnalyze) return;
-
-    if (customUrl) {
-      setTargetUrl(customUrl);
-    }
-
+    const rawUrl = customUrl || targetUrl;
+    if (!rawUrl) return;
+    
+    const urlToAnalyze = normalizeUrlForHref(rawUrl);
+    setTargetUrl(urlToAnalyze);
     setErrorMessage(null);
 
     // Verify credits availability
@@ -254,10 +251,6 @@ function AppShell() {
           <ReportPage
             auditResult={auditResult}
             targetUrl={targetUrl}
-            calcMonthlyTraffic={calcMonthlyTraffic}
-            setCalcMonthlyTraffic={setCalcMonthlyTraffic}
-            calcAOV={calcAOV}
-            setCalcAOV={setCalcAOV}
             setIsShareModalOpen={setIsShareModalOpen}
             handleReset={handleReset}
           />

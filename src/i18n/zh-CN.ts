@@ -27,7 +27,7 @@ export const zhCN: TranslationDictionary = {
     badge: '面向独立开发者的 AI 商业导师系统',
     title: '评估你的项目',
     subtitle: '输入你的项目网址，系统会从商业价值、赚钱路径、目标买家、增长杠杆、优势放大等维度，帮你判断这个项目如何更接近赚钱。',
-    inputPlaceholder: 'stripe.com',
+    inputPlaceholder: 'https://你的项目网址.com',
     analyzeButton: '评估商业价值',
     verifyCredits: '检查你的 Pilot 积分余额：',
     sampleLinks: '或者查看已验证的示例项目：'
@@ -177,6 +177,24 @@ export const zhCN: TranslationDictionary = {
     printing: '报告打印中...',
     ready: '生成成功',
     shareFallbackNotice: '分享文案已复制，分享图已开始下载！由于浏览器限制，请手动上传图片到 X / Twitter。',
-    manualUploadHint: '图片已下载，文案已复制。请手动上传图片到 X / Twitter。'
+    manualUploadHint: '图片已下载，文案已复制。请手动上传图片到 X / Twitter。',
+    estimatedValue: 'AI 估算项目价值'
+  },
+  valuation: {
+    title: 'AI 估算项目价值',
+    rangeLabel: '项目价值区间评估',
+    confidence: '可信度',
+    rationale: '估值依据',
+    valueDrivers: '价值驱动因素',
+    method: '估值方法',
+    disclaimer: '该估值为 IdeaPilot AI 商业评估模型生成的参考区间，不构成投资、融资、收购或财务建议。'
+  },
+  investorLens: {
+    title: '投资机构启发式评估',
+    subtitle: '基于专业风险投资逻辑的启发式分析，不代表真实投资机构评估或背书。',
+    thesis: '投资逻辑 / Thesis',
+    whyValuable: '商业价值点 / Why It Could Be Valuable',
+    increaseValuation: '如何提升估值 / What Would Increase Valuation',
+    confidenceBoost: '行动建议 / Confidence Boost'
   }
 };

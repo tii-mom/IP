@@ -64,6 +64,29 @@ export interface RiskWarning {
   fix: string;
 }
 
+export interface ProjectValuation {
+  estimatedValueMin: number;
+  estimatedValueMax: number;
+  currency: 'USD';
+  label: string;
+  confidence: number;
+  valuationMethod: string;
+  rationale: string;
+  valueDrivers: string[];
+  disclaimer: string;
+}
+
+export interface InvestorLensReport {
+  investorId: string;
+  investorName: string;
+  lens: string;
+  score: number;
+  thesis: string;
+  whyItCouldBeValuable: string;
+  whatWouldIncreaseValuation: string[];
+  confidenceBoost: string;
+}
+
 export interface BusinessAuditResult {
   projectName: string;
   url: string;
@@ -82,6 +105,8 @@ export interface BusinessAuditResult {
   advantageMap: AdvantageMap;
   growthLevers: GrowthLever[];
   mentorReports: MentorReport[];
+  valuation: ProjectValuation;
+  investorLensReports: InvestorLensReport[];
   actionPlan: {
     next24Hours: string[];
     next7Days: string[];

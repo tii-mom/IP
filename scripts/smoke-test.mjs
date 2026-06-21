@@ -88,13 +88,40 @@ async function runSmokeTests() {
         'projectName', 'url', 'score', 'grade',
         'summary', 'metrics', 'moneyPaths',
         'targetBuyers', 'advantageMap', 'growthLevers',
-        'mentorReports', 'actionPlan', 'riskWarnings', 'language'
+        'mentorReports', 'actionPlan', 'riskWarnings', 'language',
+        'valuation', 'investorLensReports'
       ];
 
       for (const k of keysToCheck) {
         if (!(k in report)) {
           throw new Error(`Missing expected BusinessAuditResult key: "${k}"`);
         }
+      }
+
+      // Check valuation structure
+      if (typeof report.valuation !== 'object' || report.valuation === null) {
+        throw new Error('report.valuation is missing or not an object.');
+      }
+      if (typeof report.valuation.estimatedValueMin !== 'number' || typeof report.valuation.estimatedValueMax !== 'number') {
+        throw new Error('report.valuation.estimatedValueMin or estimatedValueMax is not a number.');
+      }
+      if (report.valuation.currency !== 'USD') {
+        throw new Error(`Expected currency "USD", got "${report.valuation.currency}"`);
+      }
+
+      // Check investorLensReports structure
+      if (!Array.isArray(report.investorLensReports) || report.investorLensReports.length !== 5) {
+        throw new Error(`Expected exactly 5 investorLensReports, got ${report.investorLensReports?.length}`);
+      }
+      const expectedInvestorIds = ['sequoia', 'a16z', 'ycombinator', 'benchmark', 'accel'];
+      const actualInvestorIds = report.investorLensReports.map(r => r.investorId);
+      for (const id of expectedInvestorIds) {
+        if (!actualInvestorIds.includes(id)) {
+          throw new Error(`Missing expected investorId: "${id}"`);
+        }
+      }
+      if (!report.investorLensReports[0].confidenceBoost) {
+        throw new Error('investorLensReports[0].confidenceBoost is missing.');
       }
 
       // Check language matches
@@ -142,7 +169,9 @@ async function runSmokeTests() {
           { name: 'targetBuyers[0].whyTheyBuy', value: report.targetBuyers?.[0]?.whyTheyBuy },
           { name: 'mentorReports[0].verdict', value: report.mentorReports?.[0]?.verdict },
           { name: 'actionPlan.next24Hours[0]', value: report.actionPlan?.next24Hours?.[0] },
-          { name: 'riskWarnings[0].fix', value: report.riskWarnings?.[0]?.fix }
+          { name: 'riskWarnings[0].fix', value: report.riskWarnings?.[0]?.fix },
+          { name: 'valuation.rationale', value: report.valuation?.rationale },
+          { name: 'investorLensReports[0].thesis', value: report.investorLensReports?.[0]?.thesis }
         ];
 
         for (const item of cnFieldsToVerify) {
