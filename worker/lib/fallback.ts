@@ -279,7 +279,7 @@ export function generateFallbackReport(
         {
           investorId: 'sequoia',
           investorName: 'Sequoia Capital',
-          lens: '红杉式市场深度视角',
+          lens: '红杉资本投资哲学启发式视角',
           score: 75,
           thesis: '受红杉资本投资哲学启发：我们关注该项目在独立开发者生态中的定位，市场虽然垂直但开发者付费意愿明确。若能构建成多项目管理平台，市场深度将极大提升。',
           whyItCouldBeValuable: '开发者工具具有高黏性，一旦成为工作流核心，迁移成本极高。',
@@ -314,6 +314,32 @@ export function generateFallbackReport(
             '加入一键发布到 Product Hunt/Twitter 的集成功能'
           ],
           confidenceBoost: 'YC 强调“做用户想要的东西”。你的交付速度令人振奋，请继续保持与用户的极速沟通，用事实和数据说话！'
+        },
+        {
+          investorId: 'benchmark',
+          investorName: 'Benchmark',
+          lens: 'Benchmark 式 SaaS 指标视角',
+          score: 80,
+          thesis: '受 Benchmark 投资哲学启发：我们关注 SaaS 指标质量、高效率增长、定价权以及长期客户留存潜力。',
+          whyItCouldBeValuable: 'SaaS 工具极具粘性，且流失率低。',
+          whatWouldIncreaseValuation: [
+            '实施清晰的基于用量的阶梯定价',
+            '追踪并优化净收入留存率 (NRR)'
+          ],
+          confidenceBoost: '专注于高资本效率增长，卓越的 SaaS 留存指标是长期高估值最好的护城河！'
+        },
+        {
+          investorId: 'accel',
+          investorName: 'Accel',
+          lens: 'Accel 式增长进入市场视角',
+          score: 78,
+          thesis: '受 Accel 投资哲学启发：我们专注于进入市场 (GTM) 执行力、可重复的获客渠道、扩张速度以及战略市场时机。',
+          whyItCouldBeValuable: '直接降低了独立开发者在获客链路上的摩擦。',
+          whatWouldIncreaseValuation: [
+            '建立自动化的 SEO 目录提交循环',
+            '与创业孵化平台合作进行批量授权'
+          ],
+          confidenceBoost: '时机与执行力决定成败。加速你的 GTM 动作，以快速占领此细分市场！'
         }
       ],
       actionPlan: {
@@ -478,6 +504,32 @@ export function generateFallbackReport(
           'Integrate automated submission forms to launch directly on Product Hunt or directory list sites.'
         ],
         confidenceBoost: 'Make something people want. Your launch speed is impressive—continue listening to builders and double down on what works!'
+      },
+      {
+        investorId: 'benchmark',
+        investorName: 'Benchmark',
+        lens: 'Benchmark-style SaaS Metrics Lens',
+        score: 80,
+        thesis: 'Inspired by Benchmark’s investment philosophy: We look for SaaS metrics quality, efficient growth, pricing power, and long-term customer retention potential.',
+        whyItCouldBeValuable: 'SaaS utility is highly sticky with low churn potential.',
+        whatWouldIncreaseValuation: [
+          'Implement clear usage-based tiered pricing',
+          'Track and optimize net revenue retention (NRR)'
+        ],
+        confidenceBoost: 'Focus on efficient capital growth. Benchmark SaaS metrics loops will reward high product quality and organic adoption!'
+      },
+      {
+        investorId: 'accel',
+        investorName: 'Accel',
+        lens: 'Accel-style Go-to-Market Lens',
+        score: 78,
+        thesis: 'Inspired by Accel’s investment philosophy: We focus on go-to-market execution, repeatable acquisition channels, expansion velocity, and strategic market timing.',
+        whyItCouldBeValuable: 'Solves a direct acquisition friction for indie builders.',
+        whatWouldIncreaseValuation: [
+          'Establish automated seo directory submissions loops',
+          'Partner with startup incubator platforms for bulk licensing'
+        ],
+        confidenceBoost: 'Timing and execution are everything. Accelerate your go-to-market motion to dominate this niche!'
       }
     ],
     actionPlan: {

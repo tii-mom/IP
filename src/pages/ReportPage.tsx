@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { BusinessAuditResult, MoneyPath, TargetBuyer, GrowthLever, RiskWarning } from '../types/audit';
 import { useI18n } from '../i18n';
+import { normalizeUrlForHref, displayUrl } from '../lib/url';
 
 interface ReportPageProps {
   auditResult: BusinessAuditResult;
@@ -46,12 +47,12 @@ export default function ReportPage({
           <div className="flex items-center gap-2 text-xs text-slate-500 font-mono">
             <span>{t.report.auditedDomain}</span>
             <a
-              href={`https://${targetUrl}`}
+              href={normalizeUrlForHref(targetUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-cyan-400 hover:underline flex items-center gap-0.5"
             >
-              <span>{targetUrl}</span>
+              <span>{displayUrl(targetUrl)}</span>
               <ExternalLink className="h-3 w-3" />
             </a>
           </div>

@@ -110,8 +110,15 @@ async function runSmokeTests() {
       }
 
       // Check investorLensReports structure
-      if (!Array.isArray(report.investorLensReports) || report.investorLensReports.length < 3) {
-        throw new Error(`Expected at least 3 investorLensReports, got ${report.investorLensReports?.length}`);
+      if (!Array.isArray(report.investorLensReports) || report.investorLensReports.length !== 5) {
+        throw new Error(`Expected exactly 5 investorLensReports, got ${report.investorLensReports?.length}`);
+      }
+      const expectedInvestorIds = ['sequoia', 'a16z', 'ycombinator', 'benchmark', 'accel'];
+      const actualInvestorIds = report.investorLensReports.map(r => r.investorId);
+      for (const id of expectedInvestorIds) {
+        if (!actualInvestorIds.includes(id)) {
+          throw new Error(`Missing expected investorId: "${id}"`);
+        }
       }
       if (!report.investorLensReports[0].confidenceBoost) {
         throw new Error('investorLensReports[0].confidenceBoost is missing.');

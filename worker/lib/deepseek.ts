@@ -26,6 +26,12 @@ export function normalizeBusinessAuditResult(
 
   const safe = (val: any, def: any) => (val !== undefined && val !== null ? val : def);
 
+  const clampMetric = (val: any, def: number): number => {
+    if (val === undefined || val === null || val === '') return def;
+    const num = Number(val);
+    return isNaN(num) ? def : Math.min(Math.max(num, 0), 100);
+  };
+
   const normalizedSummary = {
     oneSentenceDiagnosis: safe(raw?.summary?.oneSentenceDiagnosis, fallback.summary.oneSentenceDiagnosis),
     biggestOpportunity: safe(raw?.summary?.biggestOpportunity, fallback.summary.biggestOpportunity),
@@ -34,13 +40,13 @@ export function normalizeBusinessAuditResult(
   };
 
   const normalizedMetrics = {
-    commercialValue: typeof raw?.metrics?.commercialValue === 'number' ? raw.metrics.commercialValue : fallback.metrics.commercialValue,
-    painkillerIndex: typeof raw?.metrics?.painkillerIndex === 'number' ? raw.metrics.painkillerIndex : fallback.metrics.painkillerIndex,
-    monetizationClarity: typeof raw?.metrics?.monetizationClarity === 'number' ? raw.metrics.monetizationClarity : fallback.metrics.monetizationClarity,
-    targetBuyerFit: typeof raw?.metrics?.targetBuyerFit === 'number' ? raw.metrics.targetBuyerFit : fallback.metrics.targetBuyerFit,
-    advantageAmplification: typeof raw?.metrics?.advantageAmplification === 'number' ? raw.metrics.advantageAmplification : fallback.metrics.advantageAmplification,
-    growthLeverage: typeof raw?.metrics?.growthLeverage === 'number' ? raw.metrics.growthLeverage : fallback.metrics.growthLeverage,
-    executionFeasibility: typeof raw?.metrics?.executionFeasibility === 'number' ? raw.metrics.executionFeasibility : fallback.metrics.executionFeasibility
+    commercialValue: clampMetric(raw?.metrics?.commercialValue, fallback.metrics.commercialValue),
+    painkillerIndex: clampMetric(raw?.metrics?.painkillerIndex, fallback.metrics.painkillerIndex),
+    monetizationClarity: clampMetric(raw?.metrics?.monetizationClarity, fallback.metrics.monetizationClarity),
+    targetBuyerFit: clampMetric(raw?.metrics?.targetBuyerFit, fallback.metrics.targetBuyerFit),
+    advantageAmplification: clampMetric(raw?.metrics?.advantageAmplification, fallback.metrics.advantageAmplification),
+    growthLeverage: clampMetric(raw?.metrics?.growthLeverage, fallback.metrics.growthLeverage),
+    executionFeasibility: clampMetric(raw?.metrics?.executionFeasibility, fallback.metrics.executionFeasibility)
   };
 
   const isZh = language === 'zh-CN';
@@ -80,7 +86,7 @@ export function normalizeBusinessAuditResult(
   const normalizedTargetBuyers = Array.isArray(raw?.targetBuyers)
     ? raw.targetBuyers.map((item: any) => ({
         segment: safe(item?.segment, defaultBuyerSegment),
-        willingnessToPay: typeof item?.willingnessToPay === 'number' ? item.willingnessToPay : 70,
+        willingnessToPay: clampMetric(item?.willingnessToPay, 70),
         whyTheyBuy: safe(item?.whyTheyBuy, defaultBuyerWhy),
         bestOffer: safe(item?.bestOffer, defaultBuyerOffer)
       }))
@@ -107,7 +113,7 @@ export function normalizeBusinessAuditResult(
         mentorId: safe(item?.mentorId, 'general_mentor'),
         mentorName: safe(item?.mentorName, defaultMentorName),
         lens: safe(item?.lens, defaultMentorLens),
-        score: typeof item?.score === 'number' ? item.score : 80,
+        score: clampMetric(item?.score, 80),
         verdict: safe(item?.verdict, defaultMentorVerdict),
         keyAdvice: Array.isArray(item?.keyAdvice) ? item.keyAdvice : [defaultMentorAdvice],
         blindSpot: safe(item?.blindSpot, defaultMentorBlindSpot)
@@ -148,7 +154,7 @@ export function normalizeBusinessAuditResult(
     estimatedValueMax: finalMax,
     currency: 'USD' as const,
     label: safe(raw?.valuation?.label, isZh ? '早期项目 AI 估算价值' : 'Early-stage AI estimated project value'),
-    confidence: typeof raw?.valuation?.confidence === 'number' ? raw.valuation.confidence : 75,
+    confidence: clampMetric(raw?.valuation?.confidence, 75),
     valuationMethod: safe(raw?.valuation?.valuationMethod, isZh ? '基于商业化潜力及执行难度的多维度权重估值算法。' : 'Multi-factor weighted valuation algorithm based on commercial potential and execution feasibility.'),
     rationale: safe(raw?.valuation?.rationale, defaultRationale),
     valueDrivers: Array.isArray(raw?.valuation?.valueDrivers) && raw.valuation.valueDrivers.length > 0 ? raw.valuation.valueDrivers : defaultDrivers,
@@ -185,38 +191,55 @@ export function normalizeBusinessAuditResult(
       whyItCouldBeValuable: isZh ? '直观的评估工具直接解决了开发者无法量化估算项目可行性的痛点。' : 'Direct utility solves the exact builder pain of objectively measuring product viability.',
       whatWouldIncreaseValuation: isZh ? ['每日根据反馈微更新', '支持一键发布至 Product Hunt'] : ['Ship incremental feedback loop updates daily', 'Integrate one-click Product Hunt launcher'],
       confidenceBoost: isZh ? 'YC 强调“做用户想要的东西”。交付速度令人振奋，请继续保持与用户的极速沟通！' : 'Make something people want. Your launch speed is impressive—continue listening to builders!'
+    },
+    {
+      investorId: 'benchmark',
+      investorName: 'Benchmark',
+      lens: isZh ? 'Benchmark 式 SaaS 指标视角' : 'Benchmark-style SaaS Metrics Lens',
+      score: 80,
+      thesis: isZh ? '受 Benchmark 投资哲学启发：我们关注 SaaS 指标质量、高效率增长、定价权以及长期客户留存潜力。' : 'Inspired by Benchmark’s investment philosophy: We look for SaaS metrics quality, efficient growth, pricing power, and long-term customer retention potential.',
+      whyItCouldBeValuable: isZh ? 'SaaS 工具极具粘性，且流失率低。' : 'SaaS utility is highly sticky with low churn potential.',
+      whatWouldIncreaseValuation: isZh ? ['实施清晰的基于用量的阶梯定价', '追踪并优化净收入留存率 (NRR)'] : ['Implement clear usage-based tiered pricing', 'Track and optimize net revenue retention (NRR)'],
+      confidenceBoost: isZh ? '专注于高资本效率增长，卓越的 SaaS 留存指标是长期高估值最好的护城河！' : 'Focus on efficient capital growth. Benchmark SaaS metrics loops will reward high product quality and organic adoption!'
+    },
+    {
+      investorId: 'accel',
+      investorName: 'Accel',
+      lens: isZh ? 'Accel 式增长进入市场视角' : 'Accel-style Go-to-Market Lens',
+      score: 78,
+      thesis: isZh ? '受 Accel 投资哲学启发：我们专注于进入市场 (GTM) 执行力、可重复的获客渠道、扩张速度以及战略市场时机。' : 'Inspired by Accel’s investment philosophy: We focus on go-to-market execution, repeatable acquisition channels, expansion velocity, and strategic market timing.',
+      whyItCouldBeValuable: isZh ? '直接降低了独立开发者在获客链路上的摩擦。' : 'Solves a direct acquisition friction for indie builders.',
+      whatWouldIncreaseValuation: isZh ? ['建立自动化的 SEO 目录提交循环', '与创业孵化平台合作进行批量授权'] : ['Establish automated seo directory submissions loops', 'Partner with startup incubator platforms for bulk licensing'],
+      confidenceBoost: isZh ? '时机与执行力决定成败。加速你的 GTM 动作，以快速占领此细分市场！' : 'Timing and execution are everything. Accelerate your go-to-market motion to dominate this niche!'
     }
   ];
 
-  let normalizedInvestorLensReports = defaultInvestorLenses;
-  if (Array.isArray(raw?.investorLensReports) && raw.investorLensReports.length > 0) {
-    normalizedInvestorLensReports = raw.investorLensReports.map((item: any) => {
-      const id = safe(item?.investorId, 'sequoia');
-      const name = id === 'sequoia' ? 'Sequoia Capital' 
-                 : id === 'a16z' ? 'Andreessen Horowitz' 
-                 : id === 'ycombinator' ? 'Y Combinator' 
-                 : id === 'benchmark' ? 'Benchmark' 
-                 : 'Accel';
-      const lens = id === 'sequoia' ? (isZh ? '红杉资本投资哲学启发式视角' : 'Sequoia-style Market Depth Lens')
-                 : id === 'a16z' ? (isZh ? 'a16z 式产品叙事视角' : 'a16z-style Product Narrative Lens')
-                 : id === 'ycombinator' ? (isZh ? 'YC 式创始人速度视角' : 'YC-style Founder Velocity Lens')
-                 : id === 'benchmark' ? (isZh ? 'Benchmark 式 SaaS 指标视角' : 'Benchmark-style SaaS Metrics Lens')
-                 : (isZh ? 'Accel 式增长进入市场视角' : 'Accel-style Go-to-Market Lens');
-      
-      const defaultMatch = defaultInvestorLenses.find(d => d.investorId === id) || defaultInvestorLenses[0];
+  const allowedIds = ['sequoia', 'a16z', 'ycombinator', 'benchmark', 'accel'];
 
-      return {
-        investorId: id,
-        investorName: name,
-        lens: lens,
-        score: typeof item?.score === 'number' ? item.score : defaultMatch.score,
-        thesis: safe(item?.thesis, defaultMatch.thesis),
-        whyItCouldBeValuable: safe(item?.whyItCouldBeValuable, defaultMatch.whyItCouldBeValuable),
-        whatWouldIncreaseValuation: Array.isArray(item?.whatWouldIncreaseValuation) && item.whatWouldIncreaseValuation.length > 0 ? item.whatWouldIncreaseValuation : defaultMatch.whatWouldIncreaseValuation,
-        confidenceBoost: safe(item?.confidenceBoost, defaultMatch.confidenceBoost)
-      };
-    });
-  }
+  const normalizedInvestorLensReports = allowedIds.map(id => {
+    const defaultMatch = defaultInvestorLenses.find(d => d.investorId === id)!;
+    
+    const rawReport = Array.isArray(raw?.investorLensReports)
+      ? raw.investorLensReports.find((item: any) => item?.investorId === id)
+      : null;
+
+    if (!rawReport) {
+      return defaultMatch;
+    }
+
+    return {
+      investorId: id,
+      investorName: defaultMatch.investorName,
+      lens: defaultMatch.lens,
+      score: clampMetric(rawReport?.score, defaultMatch.score),
+      thesis: safe(rawReport?.thesis, defaultMatch.thesis),
+      whyItCouldBeValuable: safe(rawReport?.whyItCouldBeValuable, defaultMatch.whyItCouldBeValuable),
+      whatWouldIncreaseValuation: Array.isArray(rawReport?.whatWouldIncreaseValuation) && rawReport.whatWouldIncreaseValuation.length > 0 
+        ? rawReport.whatWouldIncreaseValuation 
+        : defaultMatch.whatWouldIncreaseValuation,
+      confidenceBoost: safe(rawReport?.confidenceBoost, defaultMatch.confidenceBoost)
+    };
+  });
 
   const normalizedActionPlan = {
     next24Hours: Array.isArray(raw?.actionPlan?.next24Hours) ? raw.actionPlan.next24Hours : fallback.actionPlan.next24Hours,
@@ -236,7 +259,7 @@ export function normalizeBusinessAuditResult(
   return {
     projectName: safe(raw?.projectName, projectName),
     url: url,
-    score: typeof raw?.score === 'number' ? raw.score : fallback.score,
+    score: typeof raw?.score === 'number' ? Math.min(Math.max(raw.score, 0), 100) : fallback.score,
     grade: safe(raw?.grade, fallback.grade) as 'S' | 'A' | 'B' | 'C' | 'D',
     language: language,
     summary: normalizedSummary,
@@ -396,12 +419,52 @@ Return a JSON object conforming exactly to this structure:
   },
   "investorLensReports": [
     {
-      "investorId": "sequoia", // choose 3-5 from sequoia, a16z, ycombinator, benchmark, accel
+      "investorId": "sequoia", // must return all 5 in the list: sequoia, a16z, ycombinator, benchmark, accel
       "investorName": "Sequoia Capital",
       "lens": "Sequoia-style Market Depth Lens",
       "score": 78,
       "thesis": "Inspired by Sequoia Capital's investment philosophy, our investment thesis focuses on...",
       "whyItCouldBeValuable": "Why this project might become valuable.",
+      "whatWouldIncreaseValuation": ["Action 1", "Action 2"],
+      "confidenceBoost": "Encouraging but grounded message for the developer."
+    },
+    {
+      "investorId": "a16z",
+      "investorName": "Andreessen Horowitz",
+      "lens": "a16z-style Product Narrative Lens",
+      "score": 82,
+      "thesis": "Inspired by Andreessen Horowitz's investment philosophy...",
+      "whyItCouldBeValuable": "Why this project might become valuable.",
+      "whatWouldIncreaseValuation": ["Action 1", "Action 2"],
+      "confidenceBoost": "Encouraging but grounded message for the developer."
+    },
+    {
+      "investorId": "ycombinator",
+      "investorName": "Y Combinator",
+      "lens": "YC-style Founder Velocity Lens",
+      "score": 85,
+      "thesis": "Inspired by Y Combinator's investment philosophy...",
+      "whyItCouldBeValuable": "Why this project might become valuable.",
+      "whatWouldIncreaseValuation": ["Action 1", "Action 2"],
+      "confidenceBoost": "Encouraging but grounded message for the developer."
+    },
+    {
+      "investorId": "benchmark",
+      "investorName": "Benchmark",
+      "lens": "Benchmark-style SaaS Metrics Lens",
+      "score": 80,
+      "thesis": "Inspired by Benchmark's investment philosophy...",
+      "whyItCouldBeValuable": "Why this SaaS project might become valuable.",
+      "whatWouldIncreaseValuation": ["Action 1", "Action 2"],
+      "confidenceBoost": "Encouraging but grounded message for the developer."
+    },
+    {
+      "investorId": "accel",
+      "investorName": "Accel",
+      "lens: "Accel-style Go-to-Market Lens",
+      "score": 78,
+      "thesis": "Inspired by Accel's investment philosophy...",
+      "whyItCouldBeValuable": "Why this project timing is strategic.",
       "whatWouldIncreaseValuation": ["Action 1", "Action 2"],
       "confidenceBoost": "Encouraging but grounded message for the developer."
     }
